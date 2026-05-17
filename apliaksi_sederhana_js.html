@@ -151,7 +151,7 @@ function prosesEvaluasi() {
     if (nilaiAkhir >= kkm) {
         statusSiswa = "LULUS";
     } else {
-        statusSiswa = "REMEDI";
+        statusSiswa = "REVISI";
     }
 
     // Manipulasi DOM untuk menampilkan hasil di komponen UI
@@ -167,7 +167,7 @@ function prosesEvaluasi() {
         statusOut.innerHTML = "Selamat, Anda LULUS! 🎉";
     } else {
         box.className = "result-box gagal";
-        statusOut.innerHTML = "Maaf, Anda Harus REMEDI! 📚";
+        statusOut.innerHTML = "Maaf, Anda Harus REVISI! 📚";
     }
 
     // Menampilkan rincian kalkulasi matematika ke user
