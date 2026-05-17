@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas JS - Operator Lengkap</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 420px;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 22px;
+            text-align: center;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #3182ce;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2b6cb0;
+        }
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            background-color: #f7fafc;
+            border-left: 4px solid #cbd5e0;
+            display: none;
+        }
+        .result-box.lulus {
+            background-color: #f0fff4;
+            border-left-color: #38a169;
+            color: #276749;
+        }
+        .result-box.gagal {
+            background-color: #fff5f5;
+            border-left-color: #e53e3e;
+            color: #9b2c2c;
+        }
+        .result-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Kalkulator Kelulusan</h2>
+    
+    <div class="form-group">
+        <label for="nilaiTugas">Nilai Tugas (Bobot 40%):</label>
+        <input type="number" id="nilaiTugas" placeholder="0 - 100" min="0" max="100">
+    </div>
+
+    <div class="form-group">
+        <label for="nilaiUjian">Nilai Ujian (Bobot 60%):</label>
+        <input type="number" id="nilaiUjian" placeholder="0 - 100" min="0" max="100">
+    </div>
+
+    <button onclick="prosesEvaluasi()">Hitung Nilai & Cek</button>
+
+    <div class="result-box" id="resultBox">
+        <div class="result-title" id="statusOutput"></div>
+        <div id="detailOutput"></div>
+    </div>
+</div>
+
+<script>
+function prosesEvaluasi() {
+    // Mengambil nilai dari input form
+    let tugas = parseFloat(document.getElementById('nilaiTugas').value);
+    let ujian = parseFloat(document.getElementById('nilaiUjian').value);
+
+    // Validasi input jika kosong
+    if (isNaN(tugas) || isNaN(ujian)) {
+        alert("Silakan masukkan kedua nilai terlebih dahulu!");
+        return;
+    }
+
+    // 1. OPERATOR ARITMATIKA (* dan +)
+    // Menghitung Nilai Akhir berdasarkan bobot persentase
+    let nilaiAkhir = (tugas * 0.4) + (ujian * 0.6);
+
+    // 2. OPERATOR PENUGASAN (+=)
+    // Simulasi penambahan nilai bonus absensi secara cepat ke variabel nilaiAkhir
+    let bonusAbsen = 3;
+    nilaiAkhir += bonusAbsen;
+
+    // Menentukan batas standar kelulusan
+    let kkm = 70;
+    let statusSiswa = "";
+
+    // 3. OPERATOR PEMBANDING (>= dan ===)
+    // Membandingkan nilai akhir dengan KKM
+    if (nilaiAkhir >= kkm) {
+        statusSiswa = "LULUS";
+    } else {
+        statusSiswa = "REMEDI";
+    }
+
+    // Manipulasi DOM untuk menampilkan hasil di komponen UI
+    let box = document.getElementById('resultBox');
+    let statusOut = document.getElementById('statusOutput');
+    let detailOut = document.getElementById('detailOutput');
+
+    box.style.display = "block";
+    
+    // Menggunakan operator pembanding === untuk menentukan class styling card secara spesifik
+    if (statusSiswa === "LULUS") {
+        box.className = "result-box lulus";
+        statusOut.innerHTML = "Selamat, Anda LULUS! 🎉";
+    } else {
+        box.className = "result-box gagal";
+        statusOut.innerHTML = "Maaf, Anda Harus REMEDI! 📚";
+    }
+
+    // Menampilkan rincian kalkulasi matematika ke user
+    detailOut.innerHTML = `Nilai Akhir (Termasuk Bonus +${bonusAbsen}): <strong>${nilaiAkhir.toFixed(1)}</strong>`;
+}
+</script>
+
+</body>
+</html>
