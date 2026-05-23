@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Switch</title>
+</head>
+<body>
+    <h2>SWITCHJS</h2>
+    <p>Contoh penggunaan switch case dalam JavaScript</p>
+    <Script>
+    // switch case dengan nilai numerik
+    var nilai = 85;
+    switch (true) {
+        case (nilai >= 90):
+            console.log ("A");
+            break;
+        case (nilai >= 80):
+            console.log ("B");
+            break;
+        case (nilai >= 70):
+            console.log ("C");
+            break;
+        case (nilai >= 60):
+            console.log ("D");
+            break;
+        default:
+            console.log ("E");
+    }
+
+    // case dengan string
+    var warna = "merah";
+    switch (warna) {
+        case "merah":
+            console.log ("Warna Merah");
+            break;
+        case "biru":
+            console.log ("Warna Biru");
+            break;
+        case "hijau":
+            console.log ("Warna Hijau");
+            break;
+        default:
+            console.log ("Warna Tidak Valid");
+    }
+
+    // case dengan tanggal
+    var tanggal = newDate().getDay();
+    switch (tanggal) {
+        case 0: 
+            console.log ("Minggu");
+            break;
+        case 1:
+            console.log ("Senin");
+            break;
+        case 2:
+            console.log ("Selasa");
+            break;
+        case 3:
+            console.log ("Rabu");
+            break;
+        case 4:
+            console.log ("Kamis");
+            break;
+        case 5:
+            console.log ("Jumat");
+            break;
+        case 6:
+            console.log ("Sabtu");
+            break;
+        default:
+            console.log ("Tanggal Tidak Valid");
+    }
+    
+    </Script>
+</body>
+</html>

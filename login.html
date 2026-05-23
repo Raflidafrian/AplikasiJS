@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
+    <title>Form Login</title>
 </head>
 <body>
     <h1>SELAMAT DATANG</h1>
-    <ul>
-        <li>Nama</li>
-        <li>Nim</li>
-        <li>Nama Matkul</li>
-    </ul>
-
-
-    <div class="nama"> siswa</div>
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
+    <p>Silahkan login untuk melanjutkan</p>
+    <form>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username"><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br><br>
+        <button type="button" onclick="login()">Login</button>
+    </form>
 </body>
 </html>
