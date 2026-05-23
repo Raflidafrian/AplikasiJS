@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pemilihan if else & switch case kompleks</title>
+</head>
+<body>
+    <h3>Pemilihan if else & switch case</h3>
+    <p>1. If else</p>
+    <p>2. Switch case</p>
+    <script>
+    function hitungTotalBayar(totalBelanja, statusMember, metodePembayaran) {
+    let diskon = 0;
+
+    // 1. Kompleksitas If-Else (Pengecekan tingkat keanggotaan & nominal belanja)
+    if (statusMember === "Platinum" && totalBelanja >= 500000) {
+        diskon = 0.20; // Diskon 20%
+    } else if (statusMember === "Gold" || totalBelanja >= 300000) {
+        diskon = 0.10; // Diskon 10%
+    } else if (statusMember === "Silver" && totalBelanja >= 150000) {
+        diskon = 0.05; // Diskon 5%
+    } else {
+        diskon = 0; // Tidak dapat diskon
+    }
+
+    let totalSetelahDiskon = totalBelanja - (totalBelanja * diskon);
+
+    // 2. Kompleksitas Switch Case (Pengecekan biaya admin / cashback berdasarkan metode pembayaran)
+    let biayaAdmin = 0;
+    let pesanInfo = "";
+
+    switch (metodePembayaran.toLowerCase()) {
+        case "e-wallet":
+            biayaAdmin = 0;
+            pesanInfo = "Mendapatkan cashback 2% berupa poin!";
+            break;
+        case "credit_card":
+            biayaAdmin = 5000;
+            pesanInfo = "Dikenakan biaya penanganan CC.";
+            break;
+        case "transfer_bank":
+            biayaAdmin = 1000;
+            pesanInfo = "Gunakan kode unik saat transfer.";
+            break;
+        default:
+            biayaAdmin = 0;
+            pesanInfo = "Metode pembayaran reguler.";
+    }
+
+    let totalAkhir = totalSetelahDiskon + biayaAdmin;
+
+    return {
+        diskonDidapat: (diskon * 100) + "%",
+        biayaTambahan: biayaAdmin,
+        catatan: pesanInfo,
+        totalAkhir: totalAkhir
+    };
+}
+
+// Uji Coba Code Pemilihan
+console.log(hitungTotalBayar(600000, "Platinum", "e-wallet"));
+// Output: { diskonDidapat: '20%', biayaTambahan: 0, catatan: 'Mendapatkan cashback 2% berupa poin!', totalAkhir: 480000 }
+console.log(hitungTotalBayar(350000, "Gold", "credit_card"));
+// Output: { diskonDidapat: '10%', biayaTambahan: 5000, catatan: 'Dikenakan biaya penanganan CC.', totalAkhir: 315000 }
+console.log(hitungTotalBayar(200000, "Silver", "transfer_bank"));
+// Output: { diskonDidapat: '5%', biayaTambahan: 1000, catatan: 'Gunakan kode unik saat transfer.', totalAkhir: 190000 }
+console.log(hitungTotalBayar(100000, "Non-Member", "cash"));
+// Output: { diskonDidapat: '0%', biayaTambahan: 0, catatan: 'Metode pembayaran reguler.', totalAkhir: 100000 }
+    </script>
+</body>
+</html>

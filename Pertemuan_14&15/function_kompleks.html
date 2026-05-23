@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pemilihan function kompleks</title>
+</head>
+<body>
+
+    <h3>Function Kompleks</h3>
+    <p>1. Function dengan kompleksitas if else</p>
+    // Data Dummy Global
+    <script>
+const dataTransaksi = [
+    { id: 1, item: "Laptop", harga: 8000000, kategori: "Elektronik" },
+    { id: 2, item: "Kemeja", harga: 250000, kategori: "Pakaian" },
+    { id: 3, item: "Mouse", harga: 300000, kategori: "Elektronik" }
+];
+
+// A. Function NO PARAM & NO RETURN (Hanya log/aksi langsung)
+function cetakGarisPembatas() {
+    console.log("========================================");
+}
+
+// B. Function PARAM & RETURN VALUE (Memproses filter data yang kompleks)
+function saringTransaksi(kategoriTarget, hargaMaksimal) {
+    let hasilSaring = [];
+
+    for (let i = 0; i < dataTransaksi.length; i++) {
+        let produk = dataTransaksi[i];
+        
+        // Memastikan produk cocok dengan kategori DAN harganya di bawah batas maksimum
+        if (produk.kategori === kategoriTarget && produk.harga <= hargaMaksimal) {
+            hasilSaring.push(produk);
+        }
+    }
+
+    return hasilSaring; // Mengembalikan array hasil filter
+}
+
+// Eksekusi Gabungan Function
+cetakGarisPembatas();
+let hasilCari = saringTransaksi("Elektronik", 500000);
+console.log("Hasil Pencarian Produk:", hasilCari);
+cetakGarisPembatas();
+    </script>
+</body>
+</html>

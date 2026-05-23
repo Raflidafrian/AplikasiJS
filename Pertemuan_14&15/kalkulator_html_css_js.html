@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator HTML, CSS, JS</title>
+
+    <style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        /* BACKGROUND GAMBAR */
+        background: linear-gradient(rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.5)), 
+                    url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1920&auto=format&fit=crop') no-repeat center center;
+        background-size: cover;
+        overflow: hidden;
+        position: relative;
+    }
+
+    body::before {
+        content: '';
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.2) 0%, transparent 70%);
+        top: 15%;
+        left: 20%;
+        z-index: 0;
+    }
+
+    body::after {
+        content: '';
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+        bottom: 10%;
+        right: 15%;
+        z-index: 0;
+    }
+
+    .calculator {
+        width: 310px;
+        background: rgba(30, 41, 59, 0.65);
+        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(16px);
+        padding: 25px 20px; 
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 
+                    inset 0 1px 1px rgba(255, 255, 255, 0.15);
+        z-index: 1;
+    }
+
+    .display {
+        width: 100%;
+        height: 70px;
+        background-color: rgba(15, 23, 42, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 14px;
+        color: #f8fafc;
+        text-align: right;
+        padding: 15px 20px;
+        font-size: 2.2rem;
+        font-weight: 500;
+        margin-bottom: 20px;
+        outline: none;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px; 
+    }
+
+    .btn {
+        padding: 16px 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 14px;
+        background-color: rgba(71, 85, 105, 0.4);
+        color: #e2e8f0;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .btn:hover {
+        background-color: rgba(100, 116, 139, 0.6);
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn:active {
+        transform: translateY(0);
+    }
+
+    .btn-operator {
+        background-color: rgba(245, 158, 11, 0.25);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    .btn-operator:hover {
+        background-color: #f59e0b;
+        color: #1e293b;
+        box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+    }
+
+    .btn-clear {
+        background-color: rgba(239, 68, 68, 0.25);
+        color: #fca5a5;
+        border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    .btn-clear:hover {
+        background-color: #ef4444;
+        color: #ffffff;
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+    }
+
+    .btn-delete {
+        background-color: rgba(14, 165, 233, 0.25);
+        color: #7dd3fc;
+        border: 1px solid rgba(14, 165, 233, 0.35);
+    }
+
+    .btn-delete:hover {
+        background-color: #0ea5e9;
+        color: #ffffff;
+        box-shadow: 0 0 15px rgba(14, 165, 233, 0.5);
+    }
+
+    .btn-equal {
+        grid-row: span 2;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: #ffffff;
+        border: none;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-equal:hover {
+        background: linear-gradient(135deg, #34d399, #10b981);
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+        transform: translateY(-2px);
+    }
+
+    .btn-zero {
+        grid-column: span 2;
+    }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <input type="text" id="display" class="display" readonly placeholder="0">
+        
+        <div class="buttons">
+            <button onclick="clearDisplay()" class="btn btn-clear">C</button>
+            <button onclick="deleteLast()" class="btn btn-delete">⌫</button>
+            <button onclick="appendValue('/')" class="btn btn-operator">/</button>
+            <button onclick="appendValue('*')" class="btn btn-operator">×</button>
+
+            <button onclick="appendValue('7')" class="btn">7</button>
+            <button onclick="appendValue('8')" class="btn">8</button>
+            <button onclick="appendValue('9')" class="btn">9</button>
+            <button onclick="appendValue('-')" class="btn btn-operator">-</button>
+
+            <button onclick="appendValue('4')" class="btn">4</button>
+            <button onclick="appendValue('5')" class="btn">5</button>
+            <button onclick="appendValue('6')" class="btn">6</button>
+            <button onclick="appendValue('+')" class="btn btn-operator">+</button>
+
+            <button onclick="appendValue('1')" class="btn">1</button>
+            <button onclick="appendValue('2')" class="btn">2</button>
+            <button onclick="appendValue('3')" class="btn">3</button>
+            <button onclick="calculateResult()" class="btn btn-equal">=</button>
+
+            <button onclick="appendValue('0')" class="btn btn-zero">0</button>
+            <button onclick="appendValue('.')" class="btn">.</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+
+        function appendValue(value) {
+            display.value += value;
+        }
+
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        function deleteLast() {
+            display.value = display.value.slice(0, -1);
+        }
+
+        function calculateResult() {
+            try {
+                if (display.value !== '') {
+                    display.value = eval(display.value);
+                }
+            } catch (error) {
+                display.value = 'Error';
+                setTimeout(clearDisplay, 1500);
+            }
+        }
+    </script>
+    
+</body>
+</html>
