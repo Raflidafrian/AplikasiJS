@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>object mahasiswa</title>
+</head>
+<body>
+    
+    <h1>object mahasiswa</h1>
+
+    <script>
+        // object mahasiswa nim, nama, jurusan fakultas
+        let mahasiswa = {
+            nim : "123456789",
+            nama : "John Doe",
+            jurusan : "Informatika",
+            fakultas : "Teknik"
+        };
+        console.log(mahasiswa);
+        // akses object
+        console.log(mahasiswa.nim); // 123456789
+        console.log(mahasiswa.nama); // John Doe
+        console.log(mahasiswa.jurusan); // Informatika
+        console.log(mahasiswa.fakultas); // Teknik
+        // object dengan method
+        let mahasiswa2 = {
+            nim : "987654321",
+            nama : "Jane Doe",
+            jurusan : "Sistem Informasi",
+            fakultas : "Teknik",
+            getInfo: function() {
+                return `${this.nama} (${this.nim}) adalah mahasiswa jurusan ${this.jurusan} fakultas ${this.fakultas}`;
+            }
+        };
+        console.log(mahasiswa2.getInfo()); // Jane Doe (987654321) adalah mahasiswa jurusan Sistem Informasi fakultas Teknik
+    </script>
+</body>
+</html>

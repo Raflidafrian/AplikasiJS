@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arai of object mahasiswa 5 data</title>
+</head>
+<body>
+    <h5>Arai of object mahasiswa 5 data</h5>
+
+    <script>
+        // arai off object mahasiswa 5 data
+        let mahasiswa = [
+            {
+                nim: "123456789",
+                nama : "John Doe",
+                jurusan: "Informatika",
+                fakultas: "Teknik"
+            },
+            {
+                nim: "987654321",
+                nama: "Jane Doe",
+                jurusan: "Sistem Informasi",
+                fakultas: "Teknik"
+            },
+            {
+                nama: "Citra",
+                umur: 19,
+                nim: "1122334455",
+                jurusan: "Teknik Komputer",
+                fakultas: "Teknik",
+            },
+            {
+                nama: "Dewi",
+                nim: "5566778899",
+                jurusan: "Teknik Informatika",
+                fakultas: "Teknik"
+            },
+            {
+                nim: "9988776655",
+                nama: "Charlie Brows",
+                jurusan: "Sistem Komputer",
+                fakultas: "Teknik"
+            }
+        ];
+        console.log(mahasiswa);
+        // tampilkan dengan for 
+        for (let i = 0; i < mahasiswa.length; i++) {
+            console.log("NIM: " + mahasiswa[i].nim);
+            console.log("Nama: " + mahasiswa[i].nama);
+            console.log("Jurusan: " + mahasiswa[i].jurusan);
+            console.log("Fakultas: " + mahasiswa[i].fakultas);
+            console.log("-----------------------");
+        }
+
+    </script>
+</body>
+</html>
