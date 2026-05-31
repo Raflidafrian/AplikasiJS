@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas Pertemuan 14 - Input Data Mahasiswa</title>
+    <style>
+         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        /* Container Utama dengan Efek Glassmorphism */
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        /* Judul */
+        h2 {
+            color: #1e3c72;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border-bottom: 2px solid #eef2f3;
+            padding-bottom: 10px;
+        }
+
+        .section-title {
+            margin-top: 40px;
+        }
+
+        /* Layout Grid untuk Form agar Lebih Rapi */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        /* Styling Input dan Select Dropdown */
+        .form-group input, .form-group select {
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.3s ease;
+            background-color: #f8fafc;
+            font-family: inherit;
+            box-sizing: border-box;
+            height: 41px;
+        }
+
+        /* Efek Interaktif Fokus Input dan Select */
+        .form-group input:focus, .form-group select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+            background-color: #fff;
+        }
+
+        /* Tombol Desain Modern */
+        .btn {
+            padding: 12px 24px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            width: 100%;
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-1px);
+        }
+
+        /* Status Tombol Saat Mode Edit Ganti Warna Oranye */
+        .btn-submit.mode-edit {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        .btn-submit.mode-edit:hover {
+            background: linear-gradient(135deg, #d97706, #b45309);
+        }
+
+        /* Tombol Aksi di Tabel */
+        .action-buttons {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn-edit {
+            background-color: #f59e0b;
+        }
+        .btn-edit:hover {
+            background-color: #d97706;
+        }
+
+        .btn-delete {
+            background-color: #ef4444;
+        }
+        .btn-delete:hover {
+            background-color: #dc2626;
+        }
+
+        /* Wrapper Tabel Responsif */
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        /* Tabel Bergaya Clean & Elegan */
+        table {
+            width: 100%;
+            border-collapse: collapse; /* Menyatukan border ganda */
+            background-color: white;
+            min-width: 700px;
+        }
+
+        /* PERUBAHAN UTAMA: th dan td diberi border solid supaya membentuk grid kotak penuh */
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 14px;
+            border: 1px solid #cbd5e1; /* Garis pembatas kotak abu-abu yang soft */
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Penyesuaian Lebar & Posisi Kolom Spesifik */
+        th:nth-child(1), td:nth-child(1) { width: 50px; text-align: center; }
+        th:nth-child(2), td:nth-child(2) { width: 140px; }
+        th:nth-child(6), td:nth-child(6) { width: 140px; text-align: center; }
+
+        td {
+            color: #334155;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        /* Notifikasi jika tabel masih kosong */
+        .empty-row {
+            text-align: center;
+            color: #94a3b8;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Form Input Data Mahasiswa</h2>
+    
+    <form id="formMahasiswa">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="nim">NIM</label>
+                <input type="text" id="nim" required placeholder="Contoh: 231011450315">
+            </div>
+            <div class="form-group">
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" required placeholder="Contoh: Rafli Dafrian">
+            </div>
+            <div class="form-group">
+                <label for="jurusan">Jurusan</label>
+                <select id="jurusan" required>
+                    <option value="" disabled selected hidden>Pilih Jurusan...</option>
+                    <option value="Akuntansi">Akuntansi</option>
+                    <option value="Akuntansi Perpajakan">Akuntansi Perpajakan</option>
+                    <option value="Ilmu Hukum">Ilmu Hukum</option>
+                    <option value="Manajemen">Manajemen</option>
+                    <option value="Matematia">Matematika</option>
+                    <option value="Sains Data">Sains Data</option>
+                    <option value="Sains Inggris">Sastra Inggris</option>
+                    <option value="Sains Indonesia">Sastra Indonesia</option>
+                    <option value="Teknik Elektro">Teknik Elektro</option>
+                    <option value="Teknik Informatika">Teknik Informatika</option>
+                    <option value="Teknik Industri">Teknik Industri</option>
+                    <option value="Teknik kimia">Teknik Kimia</option>
+                    <option value="Sistem Komputer">Sistem Komputer</option>
+                    <option value="Teknik Mesin">Teknik Mesin</option>
+                    <option value="Teknik Sistem Informasi">Teknik Sistem Informasi</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="fakultas">Fakultas</label>
+                <select id="fakultas" required>
+                    <option value="" disabled selected hidden>Pilih Fakultas...</option>
+                    <option value="Fakultas Teknik">Fakultas Teknik</option>
+                    <option value="Fakultas Ilmu Komputer">Fakultas Ilmu Komputer</option>
+                    <option value="Fakultas Ekonomi">Fakultas Ekonomi dan Bisnis</option>
+                    <option value="Fakultas MIPA">Fakultas MIPA</option>
+                    <option value="Fakultas Sastra">Fakultas Sastra</option>
+                    <option value="Fakultas Hukum">Fakultas Hukum</option>
+                    <option value="Fakultas Keguruan dan Ilmu Pendidikan">Fakultas Keguruan dan Ilmu Pendidikan</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" id="btnSubmit" class="btn btn-submit">Tambah Mahasiswa</button>
+    </form>
+
+    <h2 class="section-title">Daftar Mahasiswa</h2>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>NIM</th>
+                    <th>Nama</th>
+                    <th>Jurusan</th>
+                    <th>Fakultas</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="tabelData">
+                <tr id="placeholderRow">
+                    <td colspan="6" class="empty-row">Belum ada data mahasiswa yang dimasukkan.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // 1. Inisialisasi array objek dan status edit
+    const dataMahasiswa = [];
+    let editIndex = null; 
+
+    const form = document.getElementById('formMahasiswa');
+    const tabelBody = document.getElementById('tabelData');
+    const btnSubmit = document.getElementById('btnSubmit');
+
+    // 2. Event Handler Submit Form (Tambah / Update)
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const nimInput = document.getElementById('nim').value.trim();
+        const namaInput = document.getElementById('nama').value.trim();
+        const jurusanInput = document.getElementById('jurusan').value; 
+        const fakultasInput = document.getElementById('fakultas').value; 
+
+        // Membuat Objek Baru (Key-Value)
+        const dataInputan = {
+            nim: nimInput,
+            nama: namaInput,
+            jurusan: jurusanInput,
+            fakultas: fakultasInput
+        };
+
+        if (editIndex === null) {
+            // MODE TAMBAH
+            dataMahasiswa.push(dataInputan);
+        } else {
+            // MODE EDIT
+            dataMahasiswa[editIndex] = dataInputan;
+            
+            editIndex = null;
+            btnSubmit.innerText = "Tambah Mahasiswa";
+            btnSubmit.classList.remove('mode-edit');
+        }
+
+        // Render ulang tabel, kosongkan input, dan kembalikan fokus kursor ke input NIM
+        tampilkanData();
+        form.reset();
+        document.getElementById('nim').focus();
+    });
+
+    // 3. Fungsi Menampilkan Data dari Array ke Tabel
+    function tampilkanData() {
+        tabelBody.innerHTML = '';
+
+        if (dataMahasiswa.length === 0) {
+            tabelBody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="empty-row">Belum ada data mahasiswa yang dimasukkan.</td>
+                </tr>
+            `;
+            return;
+        }
+
+        dataMahasiswa.forEach((mahasiswa, index) => {
+            const baris = document.createElement('tr');
+
+            baris.innerHTML = `
+                <td><b>${index + 1}</b></td>
+                <td>${mahasiswa.nim}</td>
+                <td>${mahasiswa.nama}</td>
+                <td>${mahasiswa.jurusan}</td>
+                <td>${mahasiswa.fakultas}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn-action btn-edit" onclick="mulaiEditData(${index})">Edit</button>
+                        <button class="btn-action btn-delete" onclick="hapusData(${index})">Hapus</button>
+                    </div>
+                </td>
+            `;
+
+            tabelBody.appendChild(baris);
+        });
+    }
+
+    // 4. Fungsi Mengisi Form Kembali Saat Tombol Edit Diklik
+    function mulaiEditData(index) {
+        editIndex = index;
+        const mahasiswaTerpilih = dataMahasiswa[index];
+
+        document.getElementById('nim').value = mahasiswaTerpilih.nim;
+        document.getElementById('nama').value = mahasiswaTerpilih.nama;
+        document.getElementById('jurusan').value = mahasiswaTerpilih.jurusan; 
+        document.getElementById('fakultas').value = mahasiswaTerpilih.fakultas; 
+
+        // Ubah visual tombol utama
+        btnSubmit.innerText = "Update Data Mahasiswa";
+        btnSubmit.classList.add('mode-edit');
+
+        // Scroll otomatis ke atas layar
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 5. Fungsi Hapus Item Berdasarkan Index Array
+    function hapusData(index) {
+        if (editIndex === index) {
+            editIndex = null;
+            btnSubmit.innerText = "Simpan ke Array & Tampilkan";
+            btnSubmit.classList.remove('mode-edit');
+            form.reset();
+        }
+        
+        dataMahasiswa.splice(index, 1);
+        tampilkanData();
+    }
+</script>
+</body>
+</html>
