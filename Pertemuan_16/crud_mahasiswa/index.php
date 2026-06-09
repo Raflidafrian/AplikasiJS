@@ -240,7 +240,7 @@ if (!isset($_SESSION['login'])) {
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
-                            <thead class="table-dark">
+                            <thead class="table-blue-dark">
                                 <tr>
                                     <th width="80">No</th>
                                     <th>NIM</th>

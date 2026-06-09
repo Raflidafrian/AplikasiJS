@@ -57,7 +57,7 @@ function hapusData(table, id) {
     }
 }
 
-// 3. Fungsi Siapkan Edit (Mengambil data ke form)
+// 3. Fungsi Siapkan Edit (Dilengkapi untuk matkul & jadwal)
 function siapkanEdit(table, id) {
     fetch(`api.php?action=get_single&id=${id}&table=${table}`)
         .then(res => res.json())
@@ -66,6 +66,7 @@ function siapkanEdit(table, id) {
             
             // Isi form (Sesuaikan ID input dengan yang ada di index.php)
             document.getElementById(`${table}_id`).value = data.id;
+
             if(table === 'mahasiswa') {
                 document.getElementById('nim').value = data.nim;
                 document.getElementById('nama').value = data.nama;
@@ -74,33 +75,63 @@ function siapkanEdit(table, id) {
             } else if (table === 'dosen') {
                 document.getElementById('nama_dosen').value = data.nama;
                 document.getElementById('alamat_dosen').value = data.alamat;
+            } else if (table === 'matkul') {
+                document.getElementById('nama_matkul').value = data.matkul; // Sesuaikan ID input matkul Anda
+                document.getElementById('sks').value = data.sks;
+            } else if (table === 'jadwal') {
+                // Pastikan dropdown terisi dulu sebelum memilih value
+                muatOpsiDropdown().then(() => {
+                    document.getElementById('id_dosen').value = data.id_dosen;
+                    document.getElementById('id_matkul').value = data.id_matkul;
+                    document.getElementById('waktu').value = data.waktu;
+                    document.getElementById('ruang').value = data.ruang;
+                });
             }
-            // Tambahkan else if untuk matkul & jadwal sesuai kebutuhan
             
             modal.show();
         });
 }
 
 // 4. Fungsi Simpan (Create & Update)
-function simpanData(event, table) {
+function simpanData(event, jenis) {
     event.preventDefault();
-    let formData = new FormData(event.target);
-    formData.append('table', table);
+    
+    let actionUrl = '';
+    let formId = '';
+    
+    if (jenis === 'mahasiswa') {
+        actionUrl = 'api.php?action=save';
+        formId = 'formMahasiswa';
+    } else if (jenis === 'dosen') {
+        actionUrl = 'api.php?action=save_dosen';
+        formId = 'formDosen';
+    } else if (jenis === 'matkul') {
+        actionUrl = 'api.php?action=save_matkul';
+        formId = 'formMatkul';
+    } else if (jenis === 'jadwal') {
+        actionUrl = 'api.php?action=save_jadwal';
+        formId = 'formJadwal';
+    }
 
-    fetch('api.php?action=save', {
+    let formData = new FormData(document.getElementById(formId));
+
+    fetch(actionUrl, {
         method: 'POST',
         body: formData
     })
-    .then(res => res.json())
+    .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            bootstrap.Modal.getInstance(document.getElementById(`${table}Modal`)).hide();
-            loadData(table);
-            event.target.reset();
+            let modalEl = document.querySelector('.modal.show');
+            let modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+            
+            loadData(jenis);
         } else {
-            alert('Gagal simpan: ' + data.message);
+            alert('Gagal menyimpan data: ' + data.message);
         }
-    });
+    })
+    .catch(error => console.error('Error:', error));
 }
 
 // Listener Tab
@@ -112,3 +143,60 @@ document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(tabButton => {
 });
 
 window.onload = () => loadData('mahasiswa');
+
+function siapkanTambah(table) {
+    let form = document.getElementById(`form${capitalize(table)}`);
+    if (form) form.reset();
+    
+    let hiddenId = document.getElementById(`${table}_id`);
+    if (hiddenId) hiddenId.value = '';
+
+    // Panggil muat dropdown otomatis jika membuka form tambah jadwal
+    if (table === 'jadwal') {
+        muatOpsiDropdown();
+    }
+}
+
+// Fungsi bantu untuk kapitalisasi huruf pertama
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// 5. Muat Opsi Dropdown (Dibuat mengembalikan Promise agar bisa disinkronkan dengan Edit)
+function muatOpsiDropdown() {
+    return Promise.all([
+        // Muat Dosen
+        fetch('api.php?action=list_dosen')
+            .then(response => response.json())
+            .then(data => {
+                let selectDosen = document.getElementById('id_dosen');
+                if (selectDosen) {
+                    selectDosen.innerHTML = '<option value="" selected disabled>Pilih Dosen</option>';
+                    data.forEach(item => {
+                        selectDosen.innerHTML += `<option value="${item.id}">${item.nama}</option>`;
+                    });
+                }
+            }),
+
+        // Muat Mata Kuliah
+        fetch('api.php?action=list_matkul')
+            .then(response => response.json())
+            .then(data => {
+                let selectMatkul = document.getElementById('id_matkul');
+                if (selectMatkul) {
+                    selectMatkul.innerHTML = '<option value="" selected disabled>Pilih Mata Kuliah</option>';
+                    data.forEach(item => {
+                        selectMatkul.innerHTML += `<option value="${item.id}">${item.matkul}</option>`;
+                    });
+                }
+            })
+    ]).catch(error => console.error('Gagal memuat opsi dropdown:', error));
+}
+
+// Tambahkan kode ini di bawah script.js Anda
+let jadwalModal = document.getElementById('jadwalModal'); // Sesuaikan ID modal Anda (misal: jadwalModal atau formJadwalModal)
+if (jadwalModal) {
+    jadwalModal.addEventListener('show.bs.modal', function (event) {
+        muatOpsiDropdown();
+    });
+}
