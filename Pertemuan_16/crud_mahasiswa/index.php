@@ -98,7 +98,7 @@ if (!isset($_SESSION['login'])) {
 
     tbody tr {
         border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-        transition: all 0.2s ease;
+        transition: all 0.5rm ease;
     }
 
     tbody tr:hover {
@@ -268,7 +268,7 @@ if (!isset($_SESSION['login'])) {
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
-                            <thead class="table-dark">
+                            <thead class="table-blue-dark">
                                 <tr>
                                     <th width="80">No</th>
                                     <th>Nama Dosen</th>
@@ -320,7 +320,7 @@ if (!isset($_SESSION['login'])) {
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
-                            <thead class="table-dark">
+                            <thead class="table-blue-dark">
                                 <tr>
                                     <th width="80">No</th>
                                     <th>Dosen</th>
