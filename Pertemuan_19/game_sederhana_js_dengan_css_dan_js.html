@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Sederhana JS dengan CSS dan JS</title>
+    <style>
+        body {
+            background: #050505; 
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
+            font-family: sans-serif;
+        }
+        #game-board {
+            width: 400px; 
+            height: 400px; 
+            border: 2px solid #00f0ff; 
+            position: relative; 
+            overflow: hidden;
+        }
+        .box {
+            width: 30px; 
+            height: 30px; 
+            position: absolute;
+        }
+        #player {
+            background: #00f0ff; 
+            box-shadow: 0 0 15px #00f0ff; 
+            bottom: 0; 
+            left: 185px;
+        }
+        .enemy {
+            background: #ff0055;
+            box-shadow: 0 0 15px #ff0055;
+            top: -30px;
+        }
+    </style>
+</head>
+<body>
+    <h3>Skor: <span id="score">0</span></h3>
+    <div id="game-board"><div id="player" class="box">
+    </div>
+</div>
+
+    <script>
+        // Modul A: Class Player
+        class Player {
+            constructor() {
+                this.x = 185;
+                this.element = document.getElementById('player');
+            }
+            move(dir) {
+                this.x = Math.max(0, Math.min(370, this.x + dir * 20));
+                this.element.style.left = this.x + 'px';
+            }
+        }
+
+        // Modul B: Inheritance Enemy
+        class Enemy {
+            constructor() {
+                this.x = Math.floor(Math.random() * 370);
+                this.y = -30;
+                this.element = document.createElement('div');
+                this.element.className = 'box enemy';
+                document.getElementById('game-board').appendChild(this.element);
+
+                const randomColor = Math.floor(Math.random()*16777215).toString(16);
+        this.element.style.backgroundColor = "#" + randomColor;
+        this.element.style.boxShadow = "0 0 15px #" + randomColor;
+        
+        document.getElementById('game-board').appendChild(this.element);
+            }
+        }
+
+        class FallingEnemy extends Enemy {
+            update() {
+                this.y += 3.5;
+                this.element.style.top = this.y + 'px';
+                this.element.style.left = this.x + 'px';
+            }
+        }
+
+        // Inisialisasi Game
+        const player = new Player();
+        let score = 0;
+        let enemies = [];
+
+        window.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowLeft') player.move(-1);
+            if(e.key === 'ArrowRight') player.move(1);
+        });
+
+        setInterval(() => {
+            if(Math.random() < 0.1) enemies.push(new FallingEnemy());
+            enemies.forEach((en, index) => {
+                en.update();
+                if(en.y > 400) { enemies.splice(index, 1); en.element.remove(); score++; document.getElementById('score').innerText = score; }
+            });
+        }, 50);
+
+        // ... (bagian atas script Anda tetap sama)
+
+// Tambahkan fungsi deteksi tabrakan di dalam interval
+setInterval(() => {
+    if(Math.random() < 0.1) enemies.push(new FallingEnemy());
+    
+    enemies.forEach((en, index) => {
+        en.update();
+        
+        // Logika Deteksi Tabrakan
+        // Mengecek apakah posisi musuh hampir sama dengan posisi player
+        if (
+            Math.abs(en.x - player.x) < 30 && 
+            Math.abs(en.y - 370) < 30 // 370 adalah posisi Y player di bagian bawah
+        ) {
+            alert("Game Over! Skor Anda: " + score);
+            location.reload(); // Reload halaman untuk memulai ulang game
+        }
+
+        // Hapus musuh jika sudah lewat bawah
+        if(en.y > 400) { 
+            enemies.splice(index, 1); 
+            en.element.remove(); 
+            score++; 
+            document.getElementById('score').innerText = score; 
+        }
+    });
+}, 50);
+    </script>
+</body>
+</html>
