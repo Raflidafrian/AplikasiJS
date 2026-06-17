@@ -76,7 +76,7 @@ function siapkanEdit(table, id) {
                 document.getElementById('nama_dosen').value = data.nama;
                 document.getElementById('alamat_dosen').value = data.alamat;
             } else if (table === 'matkul') {
-                document.getElementById('matkul').value = data.matkul; // Sesuaikan ID input matkul Anda
+                document.getElementById('nama_matkul').value = data.matkul; // Sesuaikan ID input matkul Anda
                 document.getElementById('sks').value = data.sks;
             } else if (table === 'jadwal') {
                 // Pastikan dropdown terisi dulu sebelum memilih value
