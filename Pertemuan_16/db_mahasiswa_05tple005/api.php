@@ -86,12 +86,12 @@ if ($action == 'get_single') {
 // ==========================================
 
 // Simpan Mahasiswa
-if ($action == 'save') {
-    $id      = $_POST['id'] ?? '';
-    $nim     = mysqli_real_escape_string($conn, $_POST['nim']);
-    $nama    = mysqli_real_escape_string($conn, $_POST['nama']);
-    $jurusan = mysqli_real_escape_string($conn, $_POST['jurusan']);
-    $email   = mysqli_real_escape_string($conn, $_POST['email']);
+if ($_GET['action'] == 'save') {
+    $id = $_POST['id'];
+    $nim = $_POST['nim'];
+    $nama = $_POST['nama'];
+    $jurusan = $_POST['jurusan'];
+    $email = $_POST['email'];
 
     if (empty($id)) {
         $sql = "INSERT INTO mahasiswa (nim, nama, jurusan, email) VALUES ('$nim', '$nama', '$jurusan', '$email')";

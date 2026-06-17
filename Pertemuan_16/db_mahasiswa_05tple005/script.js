@@ -96,24 +96,18 @@ function siapkanEdit(table, id) {
 function simpanData(event, jenis) {
     event.preventDefault();
     
-    let actionUrl = '';
-    let formId = '';
+    let formId = `form${capitalize(jenis)}`; // Menggunakan fungsi capitalize agar konsisten
+    let formElement = document.getElementById(formId);
     
-    if (jenis === 'mahasiswa') {
-        actionUrl = 'api.php?action=save';
-        formId = 'formMahasiswa';
-    } else if (jenis === 'dosen') {
-        actionUrl = 'api.php?action=save_dosen';
-        formId = 'formDosen';
-    } else if (jenis === 'matkul') {
-        actionUrl = 'api.php?action=save_matkul';
-        formId = 'formMatkul';
-    } else if (jenis === 'jadwal') {
-        actionUrl = 'api.php?action=save_jadwal';
-        formId = 'formJadwal';
+    if (!formElement) {
+        console.error("Form tidak ditemukan: " + formId);
+        return;
     }
 
-    let formData = new FormData(document.getElementById(formId));
+    let formData = new FormData(formElement);
+    
+    // Sesuaikan URL action
+    let actionUrl = (jenis === 'mahasiswa') ? 'api.php?action=save' : `api.php?action=save_${jenis}`;
 
     fetch(actionUrl, {
         method: 'POST',
@@ -122,13 +116,18 @@ function simpanData(event, jenis) {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            let modalEl = document.querySelector('.modal.show');
+            // Tutup modal dengan cara yang benar
+            let modalEl = document.getElementById(`${jenis}Modal`);
             let modal = bootstrap.Modal.getInstance(modalEl);
             if (modal) modal.hide();
             
+            // Reset form
+            formElement.reset();
+            
+            // Muat ulang data
             loadData(jenis);
         } else {
-            alert('Gagal menyimpan data: ' + data.message);
+            alert('Gagal menyimpan data: ' + (data.message || 'Terjadi kesalahan'));
         }
     })
     .catch(error => console.error('Error:', error));
