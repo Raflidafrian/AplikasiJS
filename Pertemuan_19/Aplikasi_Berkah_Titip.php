@@ -1,0 +1,2253 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berkah Titip — Donasi Barang Bekas Layak Pakai</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3498db">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+                    display: ['Fraunces', 'serif'],
+                    sans: ['Inter', 'sans-serif'],
+                },
+                colors: {
+                    ink: '#0C4A3E',
+                    bone: '#FBF9F4',
+                    slate: {
+                        850: '#1E293B'
+                    }
+                }
+            }
+        }
+    }
+    </script>
+    <style>
+    body {
+        font-family: 'Inter', sans-serif;
+    }
+
+    .font-display {
+        font-family: 'Fraunces', serif;
+    }
+
+    ::selection {
+        background-color: #10B981;
+        color: white;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation-duration: 0.001ms !important;
+            transition-duration: 0.001ms !important;
+        }
+    }
+
+    /* ---------- SPA page switching ---------- */
+    .app-page {
+        display: none;
+    }
+
+    .app-page.active {
+        display: block;
+    }
+
+    .page-fade {
+        animation: pageFadeIn 0.25s ease forwards;
+    }
+
+    @keyframes pageFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ---------- shared component styles (dari 4 halaman asal) ---------- */
+    .leaf-pattern {
+        background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0);
+        background-size: 24px 24px;
+    }
+
+    .auth-toggle-slider {
+        transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    #sidebar {
+        transition: width 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    .sidebar-label {
+        transition: opacity 0.2s ease, width 0.2s ease;
+    }
+
+    .dropdown-enter {
+        animation: dropdownIn 0.18s ease forwards;
+        transform-origin: top right;
+    }
+
+    @keyframes dropdownIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95) translateY(-4px);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    .progress-node {
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .step-panel {
+        animation: stepIn 0.3s ease forwards;
+    }
+
+    @keyframes stepIn {
+        from {
+            opacity: 0;
+            transform: translateX(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .dropzone.drag-active {
+        border-color: #10B981;
+        background-color: #ECFDF5;
+    }
+
+    .toggle-switch {
+        transition: background-color 0.25s ease;
+    }
+
+    .toggle-knob {
+        transition: transform 0.25s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    .fade-collapse {
+        transition: max-height 0.35s ease, opacity 0.25s ease, margin-top 0.35s ease;
+        overflow: hidden;
+    }
+
+    .stepper-line-fill {
+        transition: width 0.4s ease;
+    }
+
+    .row-enter {
+        animation: rowIn 0.25s ease forwards;
+    }
+
+    @keyframes rowIn {
+        from {
+            opacity: 0;
+            transform: translateY(4px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .filter-pill.active {
+        background-color: #0C4A3E;
+        color: white;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar {
+        height: 4px;
+        width: 4px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+    </style>
+</head>
+
+<body class="bg-bone text-slate-850 antialiased">
+
+    <!-- ============================================================ -->
+    <!-- APP ROOT -->
+    <!-- ============================================================ -->
+    <div id="app">
+
+        <!-- ============================================================ -->
+        <!-- PAGE 1 — LOGIN / REGISTER -->
+        <!-- ============================================================ -->
+        <section id="page-auth" class="app-page active page-fade">
+            <div class="min-h-screen flex">
+
+                <!-- LEFT SIDE — Brand / Quote -->
+                <div
+                    class="hidden lg:flex lg:w-[45%] xl:w-[42%] relative bg-ink overflow-hidden flex-col justify-between p-12 xl:p-16">
+                    <div class="absolute inset-0 leaf-pattern opacity-40"></div>
+                    <div class="absolute -top-24 -right-24 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl"></div>
+                    <div class="absolute bottom-0 -left-16 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl"></div>
+
+                    <div class="relative z-10 flex items-center gap-2.5 w-fit">
+                        <span
+                            class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-lg shadow-emerald-900/30">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
+                            </svg>
+                        </span>
+                        <div class="leading-tight">
+                            <p class="font-display text-xl font-semibold text-white tracking-tight">Berkah Titip</p>
+                            <p class="text-[11px] text-emerald-300/70 tracking-wide uppercase">SecondHand Share</p>
+                        </div>
+                    </div>
+
+                    <div class="relative z-10 max-w-md">
+                        <svg class="h-9 w-9 text-emerald-500/50 mb-6" fill="currentColor" viewBox="0 0 32 32">
+                            <path
+                                d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
+                        </svg>
+                        <p class="font-display text-[1.7rem] leading-[1.35] text-white font-medium">
+                            Barang yang sudah tidak terpakai bagimu, bisa jadi awal baru bagi orang lain.
+                        </p>
+                        <p class="mt-5 text-emerald-200/70 text-sm">
+                            Setiap donasi yang kamu titipkan melewati perjalanan nyata — dari rumahmu, ke tangan yang
+                            membutuhkan.
+                        </p>
+                        <div class="mt-10 flex items-center gap-8">
+                            <div>
+                                <p class="font-display text-2xl text-white font-semibold">12.480</p>
+                                <p class="text-xs text-emerald-200/60 mt-0.5">Barang disalurkan</p>
+                            </div>
+                            <div class="h-8 w-px bg-emerald-400/20"></div>
+                            <div>
+                                <p class="font-display text-2xl text-white font-semibold">340+</p>
+                                <p class="text-xs text-emerald-200/60 mt-0.5">Mitra panti & yayasan</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="relative z-10 text-xs text-emerald-200/40">© 2026 Berkah Titip. Berbagi yang
+                        berkelanjutan.</p>
+                </div>
+
+                <!-- RIGHT SIDE — Auth Form -->
+                <div class="flex-1 flex flex-col items-center justify-center px-6 py-10 sm:px-10 lg:px-16">
+
+                    <div class="lg:hidden flex items-center gap-2.5 mb-8">
+                        <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
+                            </svg>
+                        </span>
+                        <span class="font-display text-lg font-semibold text-ink tracking-tight">Berkah Titip</span>
+                    </div>
+
+                    <div class="w-full max-w-[420px]">
+
+                        <!-- Tab switcher -->
+                        <div class="relative grid grid-cols-2 mb-8 bg-slate-100 rounded-full p-1">
+                            <div id="tabSlider"
+                                class="auth-toggle-slider absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-white rounded-full shadow-sm">
+                            </div>
+                            <button type="button" id="tabLogin" onclick="setAuthTab('login')"
+                                class="relative z-10 py-2.5 text-sm font-semibold rounded-full transition-colors duration-300 text-ink"
+                                aria-pressed="true">Masuk</button>
+                            <button type="button" id="tabRegister" onclick="setAuthTab('register')"
+                                class="relative z-10 py-2.5 text-sm font-semibold rounded-full transition-colors duration-300 text-slate-400"
+                                aria-pressed="false">Daftar</button>
+                        </div>
+
+                        <!-- LOGIN FORM -->
+                        <div id="loginPanel">
+                            <div class="mb-7">
+                                <h1 class="font-display text-[1.7rem] font-semibold text-ink">Selamat datang kembali
+                                </h1>
+                                <p class="text-slate-500 text-sm mt-1.5">Masuk untuk melanjutkan donasi dan memantau
+                                    dampakmu.</p>
+                            </div>
+
+                            <form id="loginForm" class="space-y-5">
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-slate-700 mb-1.5">Alamat
+                                        email</label>
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                                            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="2" y="4" width="20" height="16" rx="2" />
+                                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                                            </svg>
+                                        </span>
+                                        <input type="email" id="email" name="email" required
+                                            placeholder="nama@email.com"
+                                            class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-white text-sm text-slate-850 placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center justify-between mb-1.5">
+                                        <label for="password" class="block text-sm font-medium text-slate-700">Kata
+                                            sandi</label>
+                                        <a href="#"
+                                            class="text-xs font-medium text-emerald-600 hover:text-emerald-700 transition-colors">Lupa
+                                            kata sandi?</a>
+                                    </div>
+                                    <div class="relative">
+                                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                                            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="3" y="11" width="18" height="11" rx="2" />
+                                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                            </svg>
+                                        </span>
+                                        <input type="password" id="password" name="password" required
+                                            placeholder="••••••••"
+                                            class="w-full pl-10 pr-11 py-3 rounded-xl border border-slate-200 bg-white text-sm text-slate-850 placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15">
+                                        <button type="button" onclick="togglePassword('password', 'eyeIconLogin')"
+                                            aria-label="Tampilkan kata sandi"
+                                            class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
+                                            <svg id="eyeIconLogin" class="h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                                                <circle cx="12" cy="12" r="3" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center justify-between pt-1">
+                                    <label class="inline-flex items-center gap-2.5 cursor-pointer select-none">
+                                        <input type="checkbox" class="peer sr-only" id="rememberMe">
+                                        <span
+                                            class="h-5 w-5 rounded-md border-2 border-slate-300 flex items-center justify-center transition-all duration-200 peer-checked:bg-emerald-500 peer-checked:border-emerald-500 peer-focus-visible:ring-4 peer-focus-visible:ring-emerald-500/20">
+                                            <svg class="h-3 w-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity"
+                                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <polyline points="20 6 9 17 4 12" />
+                                            </svg>
+                                        </span>
+                                        <span class="text-sm text-slate-600">Ingat saya</span>
+                                    </label>
+                                </div>
+
+                                <button type="submit"
+                                    class="w-full py-3.5 rounded-xl bg-emerald-600 text-white text-sm font-semibold tracking-wide shadow-lg shadow-emerald-600/25 transition-all duration-200 hover:bg-emerald-700 hover:shadow-emerald-600/35 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] focus:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500/30">
+                                    Masuk ke akun
+                                </button>
+
+                                <div class="relative flex items-center py-1">
+                                    <div class="flex-grow border-t border-slate-200"></div>
+                                    <span class="mx-4 text-xs text-slate-400 font-medium">atau lanjutkan dengan</span>
+                                    <div class="flex-grow border-t border-slate-200"></div>
+                                </div>
+
+                                <button type="button" onclick="goToPage('page-dashboard')"
+                                    class="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-700 transition-all duration-200 hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] focus:outline-none focus-visible:ring-4 focus-visible:ring-slate-500/15">
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path fill="#4285F4"
+                                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                        <path fill="#34A853"
+                                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                        <path fill="#FBBC05"
+                                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                                        <path fill="#EA4335"
+                                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                                    </svg>
+                                    Masuk dengan Google
+                                </button>
+                            </form>
+
+                            <p class="text-center text-sm text-slate-500 mt-7">
+                                Belum punya akun?
+                                <button type="button" onclick="setAuthTab('register')"
+                                    class="font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">Daftar
+                                    gratis</button>
+                            </p>
+                        </div>
+
+                        <!-- REGISTER FORM -->
+                        <div id="registerPanel" class="hidden">
+                            <div class="mb-7">
+                                <h1 class="font-display text-[1.7rem] font-semibold text-ink">Mulai berbagi hari ini
+                                </h1>
+                                <p class="text-slate-500 text-sm mt-1.5">Buat akun gratis dan jadi bagian dari rantai
+                                    donasi.</p>
+                            </div>
+
+                            <form id="registerForm" class="space-y-5">
+                                <div>
+                                    <label for="fullname" class="block text-sm font-medium text-slate-700 mb-1.5">Nama
+                                        lengkap</label>
+                                    <input type="text" id="fullname" required placeholder="Nama kamu"
+                                        class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm text-slate-850 placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15">
+                                </div>
+
+                                <div>
+                                    <label for="regEmail" class="block text-sm font-medium text-slate-700 mb-1.5">Alamat
+                                        email</label>
+                                    <input type="email" id="regEmail" required placeholder="nama@email.com"
+                                        class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm text-slate-850 placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15">
+                                </div>
+
+                                <div>
+                                    <label for="regPassword"
+                                        class="block text-sm font-medium text-slate-700 mb-1.5">Buat kata sandi</label>
+                                    <div class="relative">
+                                        <input type="password" id="regPassword" required
+                                            placeholder="Minimal 8 karakter"
+                                            class="w-full px-4 pr-11 py-3 rounded-xl border border-slate-200 bg-white text-sm text-slate-850 placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15">
+                                        <button type="button" onclick="togglePassword('regPassword', 'eyeIconRegister')"
+                                            aria-label="Tampilkan kata sandi"
+                                            class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors">
+                                            <svg id="eyeIconRegister" class="h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                                                <circle cx="12" cy="12" r="3" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <label class="flex items-start gap-2.5 cursor-pointer select-none pt-1">
+                                    <input type="checkbox" class="peer sr-only" id="agreeTerms">
+                                    <span
+                                        class="mt-0.5 h-5 w-5 flex-shrink-0 rounded-md border-2 border-slate-300 flex items-center justify-center transition-all duration-200 peer-checked:bg-emerald-500 peer-checked:border-emerald-500 peer-focus-visible:ring-4 peer-focus-visible:ring-emerald-500/20">
+                                        <svg class="h-3 w-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity"
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12" />
+                                        </svg>
+                                    </span>
+                                    <span class="text-sm text-slate-600">Saya setuju dengan <a href="#"
+                                            class="font-medium text-emerald-600 hover:text-emerald-700">Syarat
+                                            Layanan</a> dan <a href="#"
+                                            class="font-medium text-emerald-600 hover:text-emerald-700">Kebijakan
+                                            Privasi</a></span>
+                                </label>
+
+                                <button type="submit"
+                                    class="w-full py-3.5 rounded-xl bg-emerald-600 text-white text-sm font-semibold tracking-wide shadow-lg shadow-emerald-600/25 transition-all duration-200 hover:bg-emerald-700 hover:shadow-emerald-600/35 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] focus:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500/30">
+                                    Buat akun
+                                </button>
+
+                                <div class="relative flex items-center py-1">
+                                    <div class="flex-grow border-t border-slate-200"></div>
+                                    <span class="mx-4 text-xs text-slate-400 font-medium">atau lanjutkan dengan</span>
+                                    <div class="flex-grow border-t border-slate-200"></div>
+                                </div>
+
+                                <button type="button" onclick="goToPage('page-dashboard')"
+                                    class="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-700 transition-all duration-200 hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98] focus:outline-none focus-visible:ring-4 focus-visible:ring-slate-500/15">
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path fill="#4285F4"
+                                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                        <path fill="#34A853"
+                                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                        <path fill="#FBBC05"
+                                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                                        <path fill="#EA4335"
+                                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                                    </svg>
+                                    Daftar dengan Google
+                                </button>
+                            </form>
+
+                            <p class="text-center text-sm text-slate-500 mt-7">
+                                Sudah punya akun?
+                                <button type="button" onclick="setAuthTab('login')"
+                                    class="font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">Masuk
+                                    di sini</button>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- PAGE 2 — DONOR DASHBOARD -->
+        <!-- ============================================================ -->
+        <section id="page-dashboard" class="app-page">
+            <div class="min-h-screen flex">
+
+                <!-- SIDEBAR (desktop) -->
+                <aside id="sidebar"
+                    class="hidden lg:flex flex-col w-64 bg-ink flex-shrink-0 sticky top-0 h-screen z-30">
+                    <div class="flex items-center justify-between h-16 px-5 flex-shrink-0">
+                        <button type="button" onclick="goToPage('page-dashboard')"
+                            class="flex items-center gap-2.5 overflow-hidden">
+                            <span
+                                class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500 text-white flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
+                                </svg>
+                            </span>
+                            <span id="sidebarLogoText"
+                                class="sidebar-label font-display text-base font-semibold text-white tracking-tight whitespace-nowrap">Berkah
+                                Titip</span>
+                        </button>
+                    </div>
+
+                    <button type="button" onclick="toggleSidebar()" id="collapseBtn" aria-label="Ciutkan sidebar"
+                        class="mx-5 mb-2 flex items-center gap-2.5 px-3 py-2 rounded-lg text-emerald-200/50 hover:text-white hover:bg-white/5 transition-colors text-xs font-medium">
+                        <svg id="collapseIcon" class="h-4 w-4 flex-shrink-0 transition-transform duration-300"
+                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                            <line x1="9" y1="3" x2="9" y2="21" />
+                        </svg>
+                        <span class="sidebar-label whitespace-nowrap">Ciutkan menu</span>
+                    </button>
+
+                    <nav class="flex-1 px-3 space-y-1 overflow-y-auto">
+                        <button type="button" data-nav-target="page-dashboard" onclick="goToPage('page-dashboard')"
+                            class="w-full nav-link group flex items-center gap-3 px-3 py-2.5 rounded-xl bg-emerald-500/15 text-white font-medium text-sm relative">
+                            <span class="absolute left-0 top-1.5 bottom-1.5 w-1 bg-emerald-400 rounded-full"></span>
+                            <svg class="h-5 w-5 flex-shrink-0 text-emerald-400" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="9" rx="1.5" />
+                                <rect x="14" y="3" width="7" height="5" rx="1.5" />
+                                <rect x="14" y="12" width="7" height="9" rx="1.5" />
+                                <rect x="3" y="16" width="7" height="5" rx="1.5" />
+                            </svg>
+                            <span class="sidebar-label whitespace-nowrap">Dashboard</span>
+                        </button>
+                        <button type="button" data-nav-target="page-form" onclick="goToPage('page-form')"
+                            class="w-full nav-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-emerald-100/60 hover:text-white hover:bg-white/5 font-medium text-sm transition-colors">
+                            <svg class="h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            <span class="sidebar-label whitespace-nowrap">Donasi Baru</span>
+                        </button>
+                        <button type="button" data-nav-target="page-history" onclick="goToPage('page-history')"
+                            class="w-full nav-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-emerald-100/60 hover:text-white hover:bg-white/5 font-medium text-sm transition-colors">
+                            <svg class="h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M3 3v5h5" />
+                                <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8" />
+                                <path d="M12 7v5l4 2" />
+                            </svg>
+                            <span class="sidebar-label whitespace-nowrap">Riwayat</span>
+                        </button>
+                        <button type="button"
+                            class="w-full nav-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-emerald-100/60 hover:text-white hover:bg-white/5 font-medium text-sm transition-colors">
+                            <svg class="h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3" />
+                                <path
+                                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                            </svg>
+                            <span class="sidebar-label whitespace-nowrap">Pengaturan</span>
+                        </button>
+                    </nav>
+
+                    <div id="sidebarFooterCard"
+                        class="m-3 p-4 rounded-xl bg-white/5 border border-white/10 sidebar-label">
+                        <p class="text-xs text-emerald-200/60">Dampak bulan ini</p>
+                        <p class="font-display text-lg text-white font-semibold mt-0.5">+18 barang</p>
+                        <div class="mt-2.5 h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-emerald-400 rounded-full" style="width: 72%"></div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- MOBILE SIDEBAR (drawer) -->
+                <div id="mobileOverlay" onclick="toggleMobileSidebar()"
+                    class="hidden fixed inset-0 bg-slate-900/40 z-40 lg:hidden"></div>
+                <aside id="mobileSidebar"
+                    class="fixed top-0 left-0 h-screen w-72 bg-ink z-50 flex flex-col -translate-x-full transition-transform duration-300 lg:hidden">
+                    <div class="flex items-center justify-between h-16 px-5 flex-shrink-0">
+                        <span class="flex items-center gap-2.5">
+                            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500 text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
+                                </svg>
+                            </span>
+                            <span class="font-display text-base font-semibold text-white tracking-tight">Berkah
+                                Titip</span>
+                        </span>
+                        <button onclick="toggleMobileSidebar()" aria-label="Tutup menu"
+                            class="text-emerald-200/60 hover:text-white p-1">
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
+                    </div>
+                    <nav class="flex-1 px-3 space-y-1">
+                        <button type="button" data-nav-target="page-dashboard"
+                            onclick="goToPage('page-dashboard'); toggleMobileSidebar();"
+                            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-emerald-500/15 text-white font-medium text-sm">
+                            <svg class="h-5 w-5 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="9" rx="1.5" />
+                                <rect x="14" y="3" width="7" height="5" rx="1.5" />
+                                <rect x="14" y="12" width="7" height="9" rx="1.5" />
+                                <rect x="3" y="16" width="7" height="5" rx="1.5" />
+                            </svg>
+                            Dashboard
+                        </button>
+                        <button type="button" data-nav-target="page-form"
+                            onclick="goToPage('page-form'); toggleMobileSidebar();"
+                            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-emerald-100/60 hover:text-white hover:bg-white/5 font-medium text-sm">
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            Donasi Baru
+                        </button>
+                        <button type="button" data-nav-target="page-history"
+                            onclick="goToPage('page-history'); toggleMobileSidebar();"
+                            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-emerald-100/60 hover:text-white hover:bg-white/5 font-medium text-sm">
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 3v5h5" />
+                                <path d="M3.05 13A9 9 0 1 0 6 5.3L3 8" />
+                                <path d="M12 7v5l4 2" />
+                            </svg>
+                            Riwayat
+                        </button>
+                        <button type="button"
+                            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-emerald-100/60 hover:text-white hover:bg-white/5 font-medium text-sm">
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3" />
+                                <path
+                                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                            </svg>
+                            Pengaturan
+                        </button>
+                    </nav>
+                </aside>
+
+                <!-- MAIN -->
+                <div class="flex-1 min-w-0 flex flex-col">
+
+                    <!-- TOPBAR -->
+                    <header
+                        class="sticky top-0 z-20 h-16 bg-bone/80 backdrop-blur-md border-b border-slate-200 flex items-center gap-4 px-4 sm:px-6 flex-shrink-0">
+                        <button onclick="toggleMobileSidebar()" aria-label="Buka menu"
+                            class="lg:hidden p-2 -ml-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="4" y1="6" x2="20" y2="6" />
+                                <line x1="4" y1="12" x2="20" y2="12" />
+                                <line x1="4" y1="18" x2="20" y2="18" />
+                            </svg>
+                        </button>
+
+                        <div class="relative flex-1 max-w-md">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                </svg>
+                            </span>
+                            <input type="text" placeholder="Cari donasi, yayasan, atau panti..."
+                                class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15">
+                        </div>
+
+                        <div class="flex-1"></div>
+
+                        <div class="relative">
+                            <button onclick="toggleDropdown('notifDropdown')" aria-label="Notifikasi"
+                                class="relative p-2.5 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors">
+                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                                    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                                </svg>
+                                <span
+                                    class="absolute top-2 right-2 h-2 w-2 bg-amber-500 rounded-full ring-2 ring-bone"></span>
+                            </button>
+                            <div id="notifDropdown"
+                                class="hidden dropdown-enter absolute right-0 mt-2 w-80 bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-900/5 overflow-hidden">
+                                <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+                                    <p class="font-semibold text-sm text-slate-800">Notifikasi</p>
+                                    <span class="text-xs text-emerald-600 font-medium">3 baru</span>
+                                </div>
+                                <div class="max-h-72 overflow-y-auto scrollbar-thin">
+                                    <div
+                                        class="flex gap-3 px-4 py-3 hover:bg-slate-50 transition-colors border-b border-slate-50">
+                                        <span
+                                            class="h-9 w-9 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                                            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M20 6 9 17l-5-5" />
+                                            </svg>
+                                        </span>
+                                        <div class="min-w-0">
+                                            <p class="text-sm text-slate-700"><span class="font-semibold">Yayasan Kasih
+                                                    Bunda</span> menerima donasi pakaianmu.</p>
+                                            <p class="text-xs text-slate-400 mt-0.5">5 menit lalu</p>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="flex gap-3 px-4 py-3 hover:bg-slate-50 transition-colors border-b border-slate-50">
+                                        <span
+                                            class="h-9 w-9 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0">
+                                            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10" />
+                                                <polyline points="12 6 12 12 16 14" />
+                                            </svg>
+                                        </span>
+                                        <div class="min-w-0">
+                                            <p class="text-sm text-slate-700">Driver dijadwalkan jemput besok pukul
+                                                <span class="font-semibold">09.00</span>.
+                                            </p>
+                                            <p class="text-xs text-slate-400 mt-0.5">2 jam lalu</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-3 px-4 py-3 hover:bg-slate-50 transition-colors">
+                                        <span
+                                            class="h-9 w-9 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center flex-shrink-0">
+                                            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path
+                                                    d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
+                                            </svg>
+                                        </span>
+                                        <div class="min-w-0">
+                                            <p class="text-sm text-slate-700">Kamu mendapat lencana <span
+                                                    class="font-semibold">Donatur Konsisten</span>.</p>
+                                            <p class="text-xs text-slate-400 mt-0.5">Kemarin</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="block text-center py-2.5 text-xs font-semibold text-emerald-600 hover:bg-slate-50 transition-colors border-t border-slate-100 cursor-pointer">
+                                    Lihat semua notifikasi</div>
+                            </div>
+                        </div>
+
+                        <div class="h-7 w-px bg-slate-200"></div>
+
+                        <div class="relative">
+                            <button onclick="toggleDropdown('profileDropdown')"
+                                class="flex items-center gap-2.5 pl-1 pr-2 py-1 rounded-xl hover:bg-slate-100 transition-colors">
+                                <img src="https://i.pravatar.cc/80?img=47" alt="Foto profil Rafli Dafrian"
+                                    class="h-8 w-8 rounded-full object-cover ring-2 ring-white">
+                                <span class="hidden sm:block text-sm font-medium text-slate-700">Rafli Dafrian</span>
+                                <svg class="h-4 w-4 text-slate-400 hidden sm:block" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9" />
+                                </svg>
+                            </button>
+                            <div id="profileDropdown"
+                                class="hidden dropdown-enter absolute right-0 mt-2 w-56 bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-900/5 overflow-hidden">
+                                <div class="px-4 py-3 border-b border-slate-100">
+                                    <p class="text-sm font-semibold text-slate-800">Rafli Dafrian</p>
+                                    <p class="text-xs text-slate-400 truncate">raflidafrian@gmail.com</p>
+                                </div>
+                                <div class="py-1.5">
+                                    <div
+                                        class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer">
+                                        <svg class="h-4 w-4 text-slate-400" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <circle cx="12" cy="10" r="3" />
+                                            <path d="M7 20.66V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.66" />
+                                        </svg>
+                                        Profil saya
+                                    </div>
+                                    <div
+                                        class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer">
+                                        <svg class="h-4 w-4 text-slate-400" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="3" />
+                                            <path
+                                                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                                        </svg>
+                                        Pengaturan
+                                    </div>
+                                </div>
+                                <div class="py-1.5 border-t border-slate-100">
+                                    <button type="button" onclick="goToPage('page-auth')"
+                                        class="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-red-500 hover:bg-red-50 transition-colors">
+                                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                                            <polyline points="16 17 21 12 16 7" />
+                                            <line x1="21" y1="12" x2="9" y2="12" />
+                                        </svg>
+                                        Keluar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    <!-- CONTENT -->
+                    <main class="flex-1 px-4 sm:px-6 py-7 max-w-6xl w-full mx-auto">
+
+                        <div class="mb-7">
+                            <h1 class="font-display text-2xl sm:text-[1.7rem] font-semibold text-ink">Halo, Rafli 👋
+                            </h1>
+                            <p class="text-slate-500 text-sm mt-1">Begini perjalanan donasimu sejauh ini.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                            <div
+                                class="bg-white rounded-2xl border border-slate-200 p-5 hover:border-slate-300 hover:shadow-sm transition-all duration-200">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span
+                                        class="h-10 w-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path
+                                                d="M20.91 8.84 8.56 21.19a2 2 0 0 1-2.83 0l-3.5-3.5a2 2 0 0 1 0-2.83L14.59 2.5" />
+                                            <path d="M15.59 1.5 19.5 5.41" />
+                                            <path d="m2 22 2-2" />
+                                        </svg>
+                                    </span>
+                                    <span
+                                        class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+12%</span>
+                                </div>
+                                <p class="font-display text-3xl font-semibold text-ink">128</p>
+                                <p class="text-sm text-slate-500 mt-1">Total barang didonasikan</p>
+                            </div>
+
+                            <div
+                                class="bg-white rounded-2xl border border-slate-200 p-5 hover:border-slate-300 hover:shadow-sm transition-all duration-200">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span
+                                        class="h-10 w-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <rect x="1" y="3" width="15" height="13" rx="1" />
+                                            <path d="M16 8h4l3 3v5h-7V8Z" />
+                                            <circle cx="5.5" cy="18.5" r="2.5" />
+                                            <circle cx="18.5" cy="18.5" r="2.5" />
+                                        </svg>
+                                    </span>
+                                    <span
+                                        class="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded-full">Aktif</span>
+                                </div>
+                                <p class="font-display text-3xl font-semibold text-ink">3</p>
+                                <p class="text-sm text-slate-500 mt-1">Penjemputan tertunda</p>
+                            </div>
+
+                            <div
+                                class="bg-white rounded-2xl border border-slate-200 p-5 hover:border-slate-300 hover:shadow-sm transition-all duration-200">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span
+                                        class="h-10 w-10 rounded-xl bg-ink/5 text-ink flex items-center justify-center">
+                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <circle cx="12" cy="8" r="6" />
+                                            <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+                                        </svg>
+                                    </span>
+                                    <span
+                                        class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded-full">Level
+                                        4</span>
+                                </div>
+                                <p class="font-display text-3xl font-semibold text-ink">2.450</p>
+                                <p class="text-sm text-slate-500 mt-1">Poin dampak sosial</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="font-display text-lg font-semibold text-ink">Donasi Aktif</h2>
+                            <button type="button" onclick="goToPage('page-history')"
+                                class="text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">Lihat
+                                riwayat →</button>
+                        </div>
+
+                        <div class="space-y-4">
+
+                            <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6">
+                                <div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+                                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&h=200&fit=crop"
+                                        alt="Tumpukan pakaian yang akan didonasikan"
+                                        class="h-16 w-16 rounded-xl object-cover flex-shrink-0">
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex items-start justify-between gap-3">
+                                            <div>
+                                                <p class="font-semibold text-slate-800">Kotak Pakaian Musim Dingin</p>
+                                                <p class="text-sm text-slate-500 mt-0.5">Untuk Yayasan Kasih Bunda</p>
+                                            </div>
+                                            <span
+                                                class="flex-shrink-0 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full whitespace-nowrap">Driver
+                                                ditugaskan</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-6 pl-1">
+                                    <div class="relative flex items-start justify-between max-w-md">
+                                        <div class="absolute top-3 left-3 right-3 h-0.5 bg-slate-200">
+                                            <div class="h-full bg-emerald-500" style="width: 50%"></div>
+                                        </div>
+                                        <div class="relative flex flex-col items-center gap-2 z-10">
+                                            <span
+                                                class="progress-node h-6 w-6 rounded-full bg-emerald-500 border-2 border-emerald-500 flex items-center justify-center">
+                                                <svg class="h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                                    <polyline points="20 6 9 17 4 12" />
+                                                </svg>
+                                            </span>
+                                            <span class="text-xs font-medium text-slate-700 text-center">Diajukan</span>
+                                        </div>
+                                        <div class="relative flex flex-col items-center gap-2 z-10">
+                                            <span
+                                                class="progress-node h-6 w-6 rounded-full bg-emerald-500 border-2 border-emerald-500 flex items-center justify-center ring-4 ring-emerald-100">
+                                                <span class="h-2 w-2 rounded-full bg-white"></span>
+                                            </span>
+                                            <span
+                                                class="text-xs font-semibold text-ink text-center">Driver<br />Ditugaskan</span>
+                                        </div>
+                                        <div class="relative flex flex-col items-center gap-2 z-10">
+                                            <span
+                                                class="progress-node h-6 w-6 rounded-full bg-white border-2 border-slate-300"></span>
+                                            <span
+                                                class="text-xs font-medium text-slate-400 text-center">Diterima<br />Yayasan</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6">
+                                <div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+                                    <img src="https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=200&h=200&fit=crop"
+                                        alt="Buku-buku bekas yang akan didonasikan"
+                                        class="h-16 w-16 rounded-xl object-cover flex-shrink-0">
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex items-start justify-between gap-3">
+                                            <div>
+                                                <p class="font-semibold text-slate-800">15 Buku Anak Bekas Layak Baca
+                                                </p>
+                                                <p class="text-sm text-slate-500 mt-0.5">Untuk Rumah Baca Pelangi</p>
+                                            </div>
+                                            <span
+                                                class="flex-shrink-0 text-xs font-semibold text-slate-600 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full whitespace-nowrap">Diajukan</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-6 pl-1">
+                                    <div class="relative flex items-start justify-between max-w-md">
+                                        <div class="absolute top-3 left-3 right-3 h-0.5 bg-slate-200">
+                                            <div class="h-full bg-emerald-500" style="width: 0%"></div>
+                                        </div>
+                                        <div class="relative flex flex-col items-center gap-2 z-10">
+                                            <span
+                                                class="progress-node h-6 w-6 rounded-full bg-emerald-500 border-2 border-emerald-500 flex items-center justify-center ring-4 ring-emerald-100">
+                                                <span class="h-2 w-2 rounded-full bg-white"></span>
+                                            </span>
+                                            <span class="text-xs font-semibold text-ink text-center">Diajukan</span>
+                                        </div>
+                                        <div class="relative flex flex-col items-center gap-2 z-10">
+                                            <span
+                                                class="progress-node h-6 w-6 rounded-full bg-white border-2 border-slate-300"></span>
+                                            <span
+                                                class="text-xs font-medium text-slate-400 text-center">Driver<br />Ditugaskan</span>
+                                        </div>
+                                        <div class="relative flex flex-col items-center gap-2 z-10">
+                                            <span
+                                                class="progress-node h-6 w-6 rounded-full bg-white border-2 border-slate-300"></span>
+                                            <span
+                                                class="text-xs font-medium text-slate-400 text-center">Diterima<br />Yayasan</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6">
+                                <div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+                                    <img src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=200&h=200&fit=crop"
+                                        alt="Mainan anak yang akan didonasikan"
+                                        class="h-16 w-16 rounded-xl object-cover flex-shrink-0">
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex items-start justify-between gap-3">
+                                            <div>
+                                                <p class="font-semibold text-slate-800">Set Mainan Edukasi Anak</p>
+                                                <p class="text-sm text-slate-500 mt-0.5">Untuk Panti Asuhan Harapan
+                                                    Bunda</p>
+                                            </div>
+                                            <span
+                                                class="flex-shrink-0 text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full whitespace-nowrap">Dalam
+                                                perjalanan</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-6 pl-1">
+                                    <div class="relative flex items-start justify-between max-w-md">
+                                        <div class="absolute top-3 left-3 right-3 h-0.5 bg-slate-200">
+                                            <div class="h-full bg-emerald-500" style="width: 100%"></div>
+                                        </div>
+                                        <div class="relative flex flex-col items-center gap-2 z-10">
+                                            <span
+                                                class="progress-node h-6 w-6 rounded-full bg-emerald-500 border-2 border-emerald-500 flex items-center justify-center">
+                                                <svg class="h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                                    <polyline points="20 6 9 17 4 12" />
+                                                </svg>
+                                            </span>
+                                            <span class="text-xs font-medium text-slate-700 text-center">Diajukan</span>
+                                        </div>
+                                        <div class="relative flex flex-col items-center gap-2 z-10">
+                                            <span
+                                                class="progress-node h-6 w-6 rounded-full bg-emerald-500 border-2 border-emerald-500 flex items-center justify-center">
+                                                <svg class="h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                                    <polyline points="20 6 9 17 4 12" />
+                                                </svg>
+                                            </span>
+                                            <span
+                                                class="text-xs font-medium text-slate-700 text-center">Driver<br />Ditugaskan</span>
+                                        </div>
+                                        <div class="relative flex flex-col items-center gap-2 z-10">
+                                            <span
+                                                class="progress-node h-6 w-6 rounded-full bg-emerald-500 border-2 border-emerald-500 flex items-center justify-center ring-4 ring-emerald-100">
+                                                <span class="h-2 w-2 rounded-full bg-white"></span>
+                                            </span>
+                                            <span
+                                                class="text-xs font-semibold text-ink text-center">Diterima<br />Yayasan</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- PAGE 3 — FORM PENGAJUAN DONASI -->
+        <!-- ============================================================ -->
+        <section id="page-form" class="app-page">
+            <div class="min-h-screen flex flex-col">
+
+                <header class="sticky top-0 z-30 bg-bone/90 backdrop-blur-md border-b border-slate-200">
+                    <div class="max-w-3xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+                        <button type="button" onclick="goToPage('page-dashboard')" class="flex items-center gap-2.5">
+                            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500 text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
+                                </svg>
+                            </span>
+                            <span class="font-display text-base font-semibold text-ink">Berkah Titip</span>
+                        </button>
+                        <button type="button" onclick="goToPage('page-dashboard')"
+                            class="text-sm text-slate-500 hover:text-slate-700 flex items-center gap-1.5 transition-colors">Simpan
+                            & keluar</button>
+                    </div>
+                </header>
+
+                <main class="flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-10">
+
+                    <div class="mb-8">
+                        <h1 class="font-display text-2xl sm:text-3xl font-semibold text-ink">Ajukan donasi barang</h1>
+                        <p class="text-slate-500 text-sm mt-1.5">Tiga langkah singkat — barangmu akan sampai ke tangan
+                            yang tepat.</p>
+                    </div>
+
+                    <!-- STEPPER HEADER -->
+                    <div class="mb-9">
+                        <div class="relative flex items-start justify-between">
+                            <div class="absolute top-4 left-4 right-4 h-0.5 bg-slate-200"></div>
+                            <div id="stepperLineFill"
+                                class="stepper-line-fill absolute top-4 left-4 h-0.5 bg-emerald-500" style="width: 0%">
+                            </div>
+                            <div class="step-indicator relative z-10 flex flex-col items-center gap-2 flex-1"
+                                data-step="1">
+                                <span
+                                    class="step-node h-8 w-8 rounded-full bg-emerald-500 text-white border-2 border-emerald-500 flex items-center justify-center text-sm font-semibold transition-colors duration-300">1</span>
+                                <span class="step-label text-xs font-semibold text-ink text-center">Detail Barang</span>
+                            </div>
+                            <div class="step-indicator relative z-10 flex flex-col items-center gap-2 flex-1"
+                                data-step="2">
+                                <span
+                                    class="step-node h-8 w-8 rounded-full bg-white text-slate-400 border-2 border-slate-300 flex items-center justify-center text-sm font-semibold transition-colors duration-300">2</span>
+                                <span
+                                    class="step-label text-xs font-medium text-slate-400 text-center">Penyaluran</span>
+                            </div>
+                            <div class="step-indicator relative z-10 flex flex-col items-center gap-2 flex-1"
+                                data-step="3">
+                                <span
+                                    class="step-node h-8 w-8 rounded-full bg-white text-slate-400 border-2 border-slate-300 flex items-center justify-center text-sm font-semibold transition-colors duration-300">3</span>
+                                <span
+                                    class="step-label text-xs font-medium text-slate-400 text-center">Konfirmasi</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form onsubmit="return false;">
+
+                        <!-- STEP 1 -->
+                        <div id="step1" class="step-panel bg-white rounded-2xl border border-slate-200 p-5 sm:p-8">
+                            <h2 class="font-display text-lg font-semibold text-ink mb-1">Ceritakan tentang barangnya
+                            </h2>
+                            <p class="text-sm text-slate-500 mb-6">Informasi ini membantu kami mencarikan penerima yang
+                                paling cocok.</p>
+
+                            <div class="space-y-6">
+                                <div>
+                                    <label for="itemName" class="block text-sm font-medium text-slate-700 mb-1.5">Nama
+                                        barang</label>
+                                    <input type="text" id="itemName" placeholder="Contoh: Jaket Denim Ukuran M"
+                                        class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15">
+                                </div>
+
+                                <div>
+                                    <label for="category"
+                                        class="block text-sm font-medium text-slate-700 mb-1.5">Kategori</label>
+                                    <div class="relative">
+                                        <select id="category"
+                                            class="w-full appearance-none px-4 py-3 pr-10 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15">
+                                            <option value="">Pilih kategori barang</option>
+                                            <option value="clothing">Pakaian</option>
+                                            <option value="electronics">Elektronik</option>
+                                            <option value="books">Buku</option>
+                                            <option value="toys">Mainan</option>
+                                            <option value="household">Perlengkapan Rumah Tangga</option>
+                                        </select>
+                                        <span
+                                            class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 pointer-events-none">
+                                            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="6 9 12 15 18 9" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-2.5">Kondisi
+                                        barang</label>
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+
+                                        <label class="condition-card relative cursor-pointer">
+                                            <input type="radio" name="condition" value="excellent" class="peer sr-only"
+                                                checked>
+                                            <div
+                                                class="rounded-xl border-2 border-emerald-500 bg-emerald-50/50 p-4 transition-all duration-200 hover:border-slate-300">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <svg class="h-5 w-5 text-emerald-600"
+                                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                        fill="none" stroke="currentColor" stroke-width="2"
+                                                        stroke-linecap="round" stroke-linejoin="round">
+                                                        <path
+                                                            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 0 0 .95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 0 0-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 0 0-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 0 0-.363-1.118l-3.976-2.888c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 0 0 .951-.69z" />
+                                                    </svg>
+                                                    <span data-role="radio-ring"
+                                                        class="h-4 w-4 rounded-full border-2 border-emerald-500 flex items-center justify-center">
+                                                        <span data-role="radio-dot"
+                                                            class="h-2 w-2 rounded-full bg-emerald-500 opacity-100"></span>
+                                                    </span>
+                                                </div>
+                                                <p class="text-sm font-semibold text-slate-800">Sangat Baik</p>
+                                                <p class="text-xs text-slate-500 mt-0.5">Seperti baru, tanpa cacat</p>
+                                            </div>
+                                        </label>
+
+                                        <label class="condition-card relative cursor-pointer">
+                                            <input type="radio" name="condition" value="good" class="peer sr-only">
+                                            <div
+                                                class="rounded-xl border-2 border-slate-200 p-4 transition-all duration-200 hover:border-slate-300">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <svg class="h-5 w-5 text-emerald-600"
+                                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                        fill="none" stroke="currentColor" stroke-width="2"
+                                                        stroke-linecap="round" stroke-linejoin="round">
+                                                        <path d="M20 6 9 17l-5-5" />
+                                                    </svg>
+                                                    <span data-role="radio-ring"
+                                                        class="h-4 w-4 rounded-full border-2 border-slate-300 flex items-center justify-center">
+                                                        <span data-role="radio-dot"
+                                                            class="h-2 w-2 rounded-full bg-emerald-500 opacity-0"></span>
+                                                    </span>
+                                                </div>
+                                                <p class="text-sm font-semibold text-slate-800">Baik / Bekas Layak</p>
+                                                <p class="text-xs text-slate-500 mt-0.5">Masih nyaman dipakai</p>
+                                            </div>
+                                        </label>
+
+                                        <label class="condition-card relative cursor-pointer">
+                                            <input type="radio" name="condition" value="repair" class="peer sr-only">
+                                            <div
+                                                class="rounded-xl border-2 border-slate-200 p-4 transition-all duration-200 hover:border-slate-300">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <svg class="h-5 w-5 text-amber-600"
+                                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                        fill="none" stroke="currentColor" stroke-width="2"
+                                                        stroke-linecap="round" stroke-linejoin="round">
+                                                        <path
+                                                            d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                                                    </svg>
+                                                    <span data-role="radio-ring"
+                                                        class="h-4 w-4 rounded-full border-2 border-slate-300 flex items-center justify-center">
+                                                        <span data-role="radio-dot"
+                                                            class="h-2 w-2 rounded-full bg-emerald-500 opacity-0"></span>
+                                                    </span>
+                                                </div>
+                                                <p class="text-sm font-semibold text-slate-800">Perlu Perbaikan Kecil
+                                                </p>
+                                                <p class="text-xs text-slate-500 mt-0.5">Masih bisa diperbaiki</p>
+                                            </div>
+                                        </label>
+
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="description"
+                                        class="block text-sm font-medium text-slate-700 mb-1.5">Deskripsi & catatan
+                                        khusus</label>
+                                    <textarea id="description" rows="4"
+                                        placeholder="Ceritakan detail barang — ukuran, warna, kelengkapan, atau catatan lain yang perlu diketahui penerima."
+                                        class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15 resize-none"></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Foto barang</label>
+                                    <div id="dropzone"
+                                        class="dropzone relative border-2 border-dashed border-slate-300 rounded-xl px-6 py-8 text-center transition-colors duration-200 cursor-pointer hover:border-emerald-400 hover:bg-emerald-50/30">
+                                        <input type="file" id="fileInput" accept="image/*" multiple
+                                            class="absolute inset-0 opacity-0 cursor-pointer">
+                                        <svg class="h-9 w-9 text-slate-400 mx-auto mb-3"
+                                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                            <polyline points="17 8 12 3 7 8" />
+                                            <line x1="12" y1="3" x2="12" y2="15" />
+                                        </svg>
+                                        <p class="text-sm text-slate-600"><span
+                                                class="font-semibold text-emerald-600">Klik untuk unggah</span> atau
+                                            seret foto ke sini</p>
+                                        <p class="text-xs text-slate-400 mt-1">PNG atau JPG, maks 5MB per foto</p>
+                                    </div>
+                                    <div id="thumbnailGrid" class="hidden grid grid-cols-3 sm:grid-cols-4 gap-3 mt-4">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- STEP 2 -->
+                        <div id="step2" class="hidden bg-white rounded-2xl border border-slate-200 p-5 sm:p-8">
+                            <h2 class="font-display text-lg font-semibold text-ink mb-1">Bagaimana cara penyalurannya?
+                            </h2>
+                            <p class="text-sm text-slate-500 mb-6">Pilih salah satu metode di bawah ini.</p>
+
+                            <div class="space-y-4">
+                                <div class="border-2 rounded-xl p-5 transition-all duration-200 border-emerald-500"
+                                    id="dropoffCard" data-method-card="dropoff">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div class="flex items-start gap-3.5">
+                                            <span
+                                                class="h-10 w-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                                    <polyline points="9 22 9 12 15 12 15 22" />
+                                                </svg>
+                                            </span>
+                                            <div>
+                                                <p class="text-sm font-semibold text-slate-800">Antar ke Hub Terdekat
+                                                </p>
+                                                <p class="text-xs text-slate-500 mt-0.5">Tanpa biaya, fleksibel kapan
+                                                    saja</p>
+                                            </div>
+                                        </div>
+                                        <button type="button" onclick="setFulfillment('dropoff')"
+                                            aria-label="Pilih antar ke hub" id="dropoffToggle"
+                                            class="toggle-switch relative flex-shrink-0 h-6 w-11 rounded-full bg-emerald-500">
+                                            <span
+                                                class="toggle-knob absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow translate-x-5"></span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="border-2 rounded-xl p-5 transition-all duration-200 border-slate-200"
+                                    id="pickupCard" data-method-card="pickup">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div class="flex items-start gap-3.5">
+                                            <span
+                                                class="h-10 w-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0">
+                                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <rect x="1" y="3" width="15" height="13" rx="1" />
+                                                    <path d="M16 8h4l3 3v5h-7V8Z" />
+                                                    <circle cx="5.5" cy="18.5" r="2.5" />
+                                                    <circle cx="18.5" cy="18.5" r="2.5" />
+                                                </svg>
+                                            </span>
+                                            <div>
+                                                <p class="text-sm font-semibold text-slate-800">Jadwalkan Penjemputan
+                                                    Gratis</p>
+                                                <p class="text-xs text-slate-500 mt-0.5">Tim kami datang ke alamatmu</p>
+                                            </div>
+                                        </div>
+                                        <button type="button" onclick="setFulfillment('pickup')"
+                                            aria-label="Pilih jadwalkan penjemputan" id="pickupToggle"
+                                            class="toggle-switch relative flex-shrink-0 h-6 w-11 rounded-full bg-slate-200">
+                                            <span
+                                                class="toggle-knob absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow translate-x-0"></span>
+                                        </button>
+                                    </div>
+
+                                    <div id="pickupFields" class="fade-collapse max-h-0 opacity-0">
+                                        <div class="pt-5 mt-5 border-t border-slate-100 space-y-4">
+                                            <div>
+                                                <label for="pickupAddress"
+                                                    class="block text-sm font-medium text-slate-700 mb-1.5">Alamat
+                                                    penjemputan</label>
+                                                <input type="text" id="pickupAddress"
+                                                    placeholder="Jl. Mawar No. 12, Kebayoran Baru, Jakarta Selatan"
+                                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15">
+                                            </div>
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label for="pickupDate"
+                                                        class="block text-sm font-medium text-slate-700 mb-1.5">Tanggal</label>
+                                                    <input type="date" id="pickupDate"
+                                                        class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15">
+                                                </div>
+                                                <div>
+                                                    <label for="pickupTime"
+                                                        class="block text-sm font-medium text-slate-700 mb-1.5">Jam</label>
+                                                    <div class="relative">
+                                                        <select id="pickupTime"
+                                                            class="w-full appearance-none px-4 py-3 pr-10 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15">
+                                                            <option>08.00 – 10.00</option>
+                                                            <option>10.00 – 12.00</option>
+                                                            <option>13.00 – 15.00</option>
+                                                            <option>15.00 – 17.00</option>
+                                                        </select>
+                                                        <span
+                                                            class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 pointer-events-none">
+                                                            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                                stroke-width="2" stroke-linecap="round"
+                                                                stroke-linejoin="round">
+                                                                <polyline points="6 9 12 15 18 9" />
+                                                            </svg>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STEP 3 -->
+                        <div id="step3" class="hidden bg-white rounded-2xl border border-slate-200 p-5 sm:p-8">
+                            <h2 class="font-display text-lg font-semibold text-ink mb-1">Periksa kembali pengajuanmu
+                            </h2>
+                            <p class="text-sm text-slate-500 mb-6">Pastikan semua detail sudah benar sebelum dikirim.
+                            </p>
+
+                            <div class="space-y-5">
+                                <div class="rounded-xl border border-slate-200 p-5">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Detail
+                                            Barang</p>
+                                        <button type="button" onclick="goToStep(1)"
+                                            class="text-xs font-semibold text-emerald-600 hover:text-emerald-700">Ubah</button>
+                                    </div>
+                                    <dl class="space-y-2.5 text-sm">
+                                        <div class="flex justify-between gap-4">
+                                            <dt class="text-slate-500">Nama barang</dt>
+                                            <dd id="confirmName" class="font-medium text-slate-800 text-right">—</dd>
+                                        </div>
+                                        <div class="flex justify-between gap-4">
+                                            <dt class="text-slate-500">Kategori</dt>
+                                            <dd id="confirmCategory" class="font-medium text-slate-800 text-right">—
+                                            </dd>
+                                        </div>
+                                        <div class="flex justify-between gap-4">
+                                            <dt class="text-slate-500">Kondisi</dt>
+                                            <dd id="confirmCondition" class="font-medium text-slate-800 text-right">
+                                                Sangat Baik</dd>
+                                        </div>
+                                        <div class="flex justify-between gap-4">
+                                            <dt class="text-slate-500">Foto terlampir</dt>
+                                            <dd id="confirmPhotoCount" class="font-medium text-slate-800 text-right">0
+                                                foto</dd>
+                                        </div>
+                                    </dl>
+                                </div>
+
+                                <div class="rounded-xl border border-slate-200 p-5">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                                            Penyaluran</p>
+                                        <button type="button" onclick="goToStep(2)"
+                                            class="text-xs font-semibold text-emerald-600 hover:text-emerald-700">Ubah</button>
+                                    </div>
+                                    <dl class="space-y-2.5 text-sm">
+                                        <div class="flex justify-between gap-4">
+                                            <dt class="text-slate-500">Metode</dt>
+                                            <dd id="confirmMethod" class="font-medium text-slate-800 text-right">Antar
+                                                ke Hub Terdekat</dd>
+                                        </div>
+                                        <div id="confirmPickupDetails" class="hidden space-y-2.5">
+                                            <div class="flex justify-between gap-4">
+                                                <dt class="text-slate-500">Alamat</dt>
+                                                <dd id="confirmAddress" class="font-medium text-slate-800 text-right">—
+                                                </dd>
+                                            </div>
+                                            <div class="flex justify-between gap-4">
+                                                <dt class="text-slate-500">Jadwal</dt>
+                                                <dd id="confirmSchedule" class="font-medium text-slate-800 text-right">—
+                                                </dd>
+                                            </div>
+                                        </div>
+                                    </dl>
+                                </div>
+
+                                <div
+                                    class="flex items-start gap-3 rounded-xl bg-emerald-50/60 border border-emerald-100 p-4">
+                                    <svg class="h-5 w-5 text-emerald-600 flex-shrink-0 mt-0.5"
+                                        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="12" y1="16" x2="12" y2="12" />
+                                        <line x1="12" y1="8" x2="12.01" y2="8" />
+                                    </svg>
+                                    <p class="text-sm text-emerald-900">Setelah dikirim, kamu bisa memantau status
+                                        donasi ini secara langsung dari Dashboard.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- NAV BUTTONS -->
+                        <div class="flex items-center justify-between mt-6">
+                            <button type="button" onclick="prevStep()" id="btnPrev"
+                                class="hidden items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors duration-200">
+                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="19" y1="12" x2="5" y2="12" />
+                                    <polyline points="12 19 5 12 12 5" />
+                                </svg>
+                                Kembali
+                            </button>
+                            <div class="flex-1"></div>
+                            <button type="button" onclick="nextStep()" id="btnNext"
+                                class="flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 text-white text-sm font-semibold shadow-lg shadow-emerald-600/25 transition-all duration-200 hover:bg-emerald-700 hover:shadow-emerald-600/35 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] focus:outline-none focus-visible:ring-4 focus-visible:ring-emerald-500/30">
+                                Lanjutkan
+                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                    <polyline points="12 5 19 12 12 19" />
+                                </svg>
+                            </button>
+                        </div>
+
+                    </form>
+                </main>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- PAGE 4 — RIWAYAT DONASI -->
+        <!-- ============================================================ -->
+        <section id="page-history" class="app-page">
+            <div class="min-h-screen flex flex-col">
+
+                <header class="sticky top-0 z-30 bg-bone/90 backdrop-blur-md border-b border-slate-200">
+                    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
+                        <button type="button" onclick="goToPage('page-dashboard')"
+                            class="flex items-center gap-2.5 flex-shrink-0">
+                            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500 text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
+                                </svg>
+                            </span>
+                            <span class="font-display text-base font-semibold text-ink hidden sm:block">Berkah
+                                Titip</span>
+                        </button>
+                        <div class="flex-1"></div>
+                        <button type="button" onclick="goToPage('page-dashboard')" aria-label="Kembali ke dashboard"
+                            class="flex-shrink-0">
+                            <img src="https://i.pravatar.cc/80?img=47" alt="Foto profil Sarah Wijaya"
+                                class="h-8 w-8 rounded-full object-cover ring-2 ring-white hover:ring-emerald-300 transition-all">
+                        </button>
+                    </div>
+                </header>
+
+                <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8">
+
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                        <div>
+                            <button type="button" onclick="goToPage('page-dashboard')"
+                                class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-emerald-600 transition-colors mb-2">
+                                <svg class="h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="19" y1="12" x2="5" y2="12" />
+                                    <polyline points="12 19 5 12 12 5" />
+                                </svg>
+                                Kembali ke Dashboard
+                            </button>
+                            <h1 class="font-display text-2xl sm:text-[1.7rem] font-semibold text-ink">Riwayat Donasi
+                            </h1>
+                            <p class="text-slate-500 text-sm mt-1">Semua barang yang pernah kamu salurkan, dalam satu
+                                tempat.</p>
+                        </div>
+                        <button type="button" onclick="goToPage('page-form')"
+                            class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 text-white text-sm font-semibold shadow-lg shadow-emerald-600/25 transition-all duration-200 hover:bg-emerald-700 hover:shadow-emerald-600/35 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] flex-shrink-0 self-start">
+                            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            Donasi Baru
+                        </button>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-5">
+                        <div class="relative flex-1 max-w-sm">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                </svg>
+                            </span>
+                            <input type="text" id="searchInput" oninput="applyFilters()"
+                                placeholder="Cari nama barang atau yayasan..."
+                                class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm placeholder:text-slate-400 outline-none transition-all duration-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15">
+                        </div>
+
+                        <div
+                            class="flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl p-1 overflow-x-auto scrollbar-thin w-fit">
+                            <button onclick="setFilter('all')" data-filter="all"
+                                class="filter-pill active flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 transition-colors duration-200 whitespace-nowrap">Semua</button>
+                            <button onclick="setFilter('completed')" data-filter="completed"
+                                class="filter-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 transition-colors duration-200 whitespace-nowrap">Selesai</button>
+                            <button onclick="setFilter('progress')" data-filter="progress"
+                                class="filter-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 transition-colors duration-200 whitespace-nowrap">Diproses</button>
+                            <button onclick="setFilter('cancelled')" data-filter="cancelled"
+                                class="filter-pill flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 transition-colors duration-200 whitespace-nowrap">Dibatalkan</button>
+                        </div>
+                    </div>
+
+                    <p id="resultCount" class="text-xs text-slate-400 mb-3"></p>
+
+                    <!-- DESKTOP TABLE -->
+                    <div class="hidden md:block bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b border-slate-200 bg-slate-50/60">
+                                    <th
+                                        class="text-left font-semibold text-slate-500 text-xs uppercase tracking-wide px-5 py-3.5">
+                                        Barang</th>
+                                    <th
+                                        class="text-left font-semibold text-slate-500 text-xs uppercase tracking-wide px-5 py-3.5">
+                                        Tanggal Diajukan</th>
+                                    <th
+                                        class="text-left font-semibold text-slate-500 text-xs uppercase tracking-wide px-5 py-3.5">
+                                        Yayasan Tujuan</th>
+                                    <th
+                                        class="text-left font-semibold text-slate-500 text-xs uppercase tracking-wide px-5 py-3.5">
+                                        Status</th>
+                                    <th class="px-5 py-3.5"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                        <div id="emptyStateDesktop"
+                            class="hidden flex-col items-center justify-center py-16 px-5 text-center">
+                            <span
+                                class="h-12 w-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mb-3">
+                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                </svg>
+                            </span>
+                            <p class="text-sm font-semibold text-slate-700">Tidak ada donasi yang cocok</p>
+                            <p class="text-xs text-slate-400 mt-1">Coba ubah kata kunci pencarian atau filter status.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- MOBILE STACKED CARDS -->
+                    <div id="cardList" class="md:hidden space-y-3"></div>
+                    <div id="emptyStateMobile"
+                        class="hidden md:hidden flex-col items-center justify-center py-16 px-5 text-center bg-white rounded-2xl border border-slate-200">
+                        <span
+                            class="h-12 w-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mb-3 mx-auto">
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                        </span>
+                        <p class="text-sm font-semibold text-slate-700">Tidak ada donasi yang cocok</p>
+                        <p class="text-xs text-slate-400 mt-1">Coba ubah kata kunci pencarian atau filter status.</p>
+                    </div>
+
+                </main>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+    /* ============================================================
+     ROUTER — pindah "halaman" tanpa reload
+     ============================================================ */
+    function goToPage(pageId) {
+        document.querySelectorAll('.app-page').forEach(p => {
+            p.classList.remove('active', 'page-fade');
+        });
+        const target = document.getElementById(pageId);
+        target.classList.add('active');
+        void target.offsetWidth; // restart animasi fade tiap kali pindah halaman
+        target.classList.add('page-fade');
+        window.scrollTo(0, 0);
+
+        document.querySelectorAll('[data-nav-target]').forEach(el => {
+            const isActive = el.dataset.navTarget === pageId;
+            el.classList.toggle('bg-emerald-500/15', isActive);
+            el.classList.toggle('text-white', isActive);
+            el.classList.toggle('text-emerald-100/60', !isActive);
+        });
+    }
+
+    /* ============================================================
+       PAGE 1 — LOGIN / REGISTER
+       ============================================================ */
+    function togglePassword(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        const isHidden = input.type === 'password';
+        input.type = isHidden ? 'text' : 'password';
+        icon.innerHTML = isHidden ?
+            '<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/>' :
+            '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>';
+    }
+
+    function setAuthTab(tab) {
+        const slider = document.getElementById('tabSlider');
+        const tabLogin = document.getElementById('tabLogin');
+        const tabRegister = document.getElementById('tabRegister');
+        const loginPanel = document.getElementById('loginPanel');
+        const registerPanel = document.getElementById('registerPanel');
+
+        if (tab === 'login') {
+            slider.style.transform = 'translateX(0)';
+            tabLogin.classList.add('text-ink');
+            tabLogin.classList.remove('text-slate-400');
+            tabRegister.classList.add('text-slate-400');
+            tabRegister.classList.remove('text-ink');
+            tabLogin.setAttribute('aria-pressed', 'true');
+            tabRegister.setAttribute('aria-pressed', 'false');
+            loginPanel.classList.remove('hidden');
+            registerPanel.classList.add('hidden');
+        } else {
+            slider.style.transform = 'translateX(100%)';
+            tabRegister.classList.add('text-ink');
+            tabRegister.classList.remove('text-slate-400');
+            tabLogin.classList.add('text-slate-400');
+            tabLogin.classList.remove('text-ink');
+            tabRegister.setAttribute('aria-pressed', 'true');
+            tabLogin.setAttribute('aria-pressed', 'false');
+            registerPanel.classList.remove('hidden');
+            loginPanel.classList.add('hidden');
+        }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        goToPage('page-dashboard');
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        goToPage('page-dashboard');
+    });
+
+    /* ============================================================
+       PAGE 2 — DONOR DASHBOARD
+       ============================================================ */
+    let sidebarCollapsed = false;
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const labels = document.querySelectorAll('.sidebar-label');
+        const footerCard = document.getElementById('sidebarFooterCard');
+        const icon = document.getElementById('collapseIcon');
+        sidebarCollapsed = !sidebarCollapsed;
+
+        if (sidebarCollapsed) {
+            sidebar.classList.remove('w-64');
+            sidebar.classList.add('w-20');
+            labels.forEach(l => l.classList.add('hidden'));
+            footerCard.classList.add('hidden');
+            icon.style.transform = 'rotate(180deg)';
+        } else {
+            sidebar.classList.remove('w-20');
+            sidebar.classList.add('w-64');
+            labels.forEach(l => l.classList.remove('hidden'));
+            footerCard.classList.remove('hidden');
+            icon.style.transform = 'rotate(0deg)';
+        }
+    }
+
+    function toggleMobileSidebar() {
+        const sidebar = document.getElementById('mobileSidebar');
+        const overlay = document.getElementById('mobileOverlay');
+        const isOpen = !sidebar.classList.contains('-translate-x-full');
+        if (isOpen) {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        } else {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+        }
+    }
+
+    function toggleDropdown(id) {
+        const dropdown = document.getElementById(id);
+        const isHidden = dropdown.classList.contains('hidden');
+        document.querySelectorAll('[id$="Dropdown"]').forEach(d => d.classList.add('hidden'));
+        if (isHidden) dropdown.classList.remove('hidden');
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('[onclick^="toggleDropdown"]') && !e.target.closest('[id$="Dropdown"]')) {
+            document.querySelectorAll('[id$="Dropdown"]').forEach(d => d.classList.add('hidden'));
+        }
+    });
+
+    /* ============================================================
+       PAGE 3 — FORM PENGAJUAN DONASI
+       ============================================================ */
+    let currentStep = 1;
+    let fulfillmentMethod = 'dropoff';
+    let uploadedPhotos = [];
+
+    function goToStep(step) {
+        currentStep = step;
+        renderStep();
+    }
+
+    function nextStep() {
+        if (currentStep < 3) {
+            currentStep++;
+            renderStep();
+            if (currentStep === 3) populateConfirmation();
+        }
+    }
+
+    function prevStep() {
+        if (currentStep > 1) {
+            currentStep--;
+            renderStep();
+        }
+    }
+
+    function renderStep() {
+        [1, 2, 3].forEach(i => {
+            const panel = document.getElementById('step' + i);
+            if (i === currentStep) {
+                panel.classList.remove('hidden');
+                panel.classList.add('step-panel');
+            } else {
+                panel.classList.add('hidden');
+            }
+        });
+
+        document.querySelectorAll('.step-indicator').forEach(el => {
+            const stepNum = parseInt(el.dataset.step);
+            const node = el.querySelector('.step-node');
+            const label = el.querySelector('.step-label');
+            if (stepNum < currentStep) {
+                node.className =
+                    'step-node h-8 w-8 rounded-full bg-emerald-500 text-white border-2 border-emerald-500 flex items-center justify-center text-sm font-semibold transition-colors duration-300';
+                node.innerHTML =
+                    '<svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+                label.className = 'step-label text-xs font-semibold text-ink text-center';
+            } else if (stepNum === currentStep) {
+                node.className =
+                    'step-node h-8 w-8 rounded-full bg-emerald-500 text-white border-2 border-emerald-500 flex items-center justify-center text-sm font-semibold transition-colors duration-300';
+                node.innerHTML = stepNum;
+                label.className = 'step-label text-xs font-semibold text-ink text-center';
+            } else {
+                node.className =
+                    'step-node h-8 w-8 rounded-full bg-white text-slate-400 border-2 border-slate-300 flex items-center justify-center text-sm font-semibold transition-colors duration-300';
+                node.innerHTML = stepNum;
+                label.className = 'step-label text-xs font-medium text-slate-400 text-center';
+            }
+        });
+
+        const fillPercent = ((currentStep - 1) / 2) * 100;
+        document.getElementById('stepperLineFill').style.width = fillPercent + '%';
+
+        const btnPrev = document.getElementById('btnPrev');
+        const btnNext = document.getElementById('btnNext');
+        btnPrev.classList.toggle('hidden', currentStep === 1);
+        btnPrev.classList.toggle('flex', currentStep !== 1);
+
+        if (currentStep === 3) {
+            btnNext.innerHTML =
+                `Kirim Pengajuan
+        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>`;
+            btnNext.onclick = submitDonation;
+        } else {
+            btnNext.innerHTML =
+                `Lanjutkan
+        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+            btnNext.onclick = nextStep;
+        }
+
+        document.getElementById('page-form').scrollTo(0, 0);
+        window.scrollTo(0, 0);
+    }
+
+    function submitDonation() {
+        alert('Pengajuan donasi berhasil dikirim!');
+        // reset form ke step 1 untuk pengajuan berikutnya
+        currentStep = 1;
+        renderStep();
+        goToPage('page-dashboard');
+    }
+
+    document.querySelectorAll('input[name="condition"]').forEach(input => {
+        input.addEventListener('change', () => {
+            document.querySelectorAll('.condition-card > div').forEach(card => {
+                card.classList.remove('border-emerald-500', 'bg-emerald-50/50');
+                card.classList.add('border-slate-200');
+                const dot = card.querySelector('[data-role="radio-dot"]');
+                const ring = card.querySelector('[data-role="radio-ring"]');
+                if (dot) dot.classList.add('opacity-0');
+                if (ring) {
+                    ring.classList.remove('border-emerald-500');
+                    ring.classList.add('border-slate-300');
+                }
+            });
+            const checkedCard = input.closest('.condition-card').querySelector('div');
+            checkedCard.classList.remove('border-slate-200');
+            checkedCard.classList.add('border-emerald-500', 'bg-emerald-50/50');
+            const dot = checkedCard.querySelector('[data-role="radio-dot"]');
+            const ring = checkedCard.querySelector('[data-role="radio-ring"]');
+            if (dot) dot.classList.remove('opacity-0');
+            if (ring) {
+                ring.classList.remove('border-slate-300');
+                ring.classList.add('border-emerald-500');
+            }
+        });
+    });
+
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const thumbnailGrid = document.getElementById('thumbnailGrid');
+
+    ['dragenter', 'dragover'].forEach(evt => {
+        dropzone.addEventListener(evt, (e) => {
+            e.preventDefault();
+            dropzone.classList.add('drag-active');
+        });
+    });
+    ['dragleave', 'drop'].forEach(evt => {
+        dropzone.addEventListener(evt, (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('drag-active');
+        });
+    });
+    dropzone.addEventListener('drop', (e) => {
+        handleFiles(e.dataTransfer.files);
+    });
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+        Array.from(files).forEach(file => {
+            if (!file.type.startsWith('image/')) return;
+            // eslint-disable-next-line no-undef
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const id = 'photo-' + Date.now() + Math.random().toString(36).slice(2, 7);
+                uploadedPhotos.push({
+                    id,
+                    src: e.target.result,
+                    name: file.name
+                });
+                renderThumbnails();
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function renderThumbnails() {
+        if (uploadedPhotos.length === 0) {
+            thumbnailGrid.classList.add('hidden');
+            thumbnailGrid.innerHTML = '';
+            return;
+        }
+        thumbnailGrid.classList.remove('hidden');
+        thumbnailGrid.innerHTML = uploadedPhotos.map(photo => `
+      <div class="relative group aspect-square rounded-xl overflow-hidden border border-slate-200">
+        <img src="${photo.src}" alt="${photo.name}" class="h-full w-full object-cover">
+        <button type="button" onclick="removePhoto('${photo.id}')" aria-label="Hapus foto"
+          class="absolute top-1.5 right-1.5 h-6 w-6 rounded-full bg-slate-900/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-500">
+          <svg class="h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    `).join('');
+    }
+
+    function removePhoto(id) {
+        uploadedPhotos = uploadedPhotos.filter(p => p.id !== id);
+        renderThumbnails();
+    }
+
+    function setFulfillment(method) {
+        fulfillmentMethod = method;
+
+        const dropoffToggle = document.getElementById('dropoffToggle');
+        const pickupToggle = document.getElementById('pickupToggle');
+        const dropoffKnob = dropoffToggle.querySelector('.toggle-knob');
+        const pickupKnob = pickupToggle.querySelector('.toggle-knob');
+        const dropoffCard = document.getElementById('dropoffCard');
+        const pickupCard = document.getElementById('pickupCard');
+        const pickupFields = document.getElementById('pickupFields');
+
+        if (method === 'dropoff') {
+            dropoffToggle.classList.remove('bg-slate-200');
+            dropoffToggle.classList.add('bg-emerald-500');
+            dropoffKnob.classList.add('translate-x-5');
+            dropoffKnob.classList.remove('translate-x-0');
+            pickupToggle.classList.remove('bg-emerald-500');
+            pickupToggle.classList.add('bg-slate-200');
+            pickupKnob.classList.remove('translate-x-5');
+            pickupKnob.classList.add('translate-x-0');
+            dropoffCard.classList.add('border-emerald-500');
+            dropoffCard.classList.remove('border-slate-200');
+            pickupCard.classList.remove('border-emerald-500');
+            pickupCard.classList.add('border-slate-200');
+            pickupFields.style.maxHeight = '0px';
+            pickupFields.style.opacity = '0';
+        } else {
+            pickupToggle.classList.remove('bg-slate-200');
+            pickupToggle.classList.add('bg-emerald-500');
+            pickupKnob.classList.add('translate-x-5');
+            pickupKnob.classList.remove('translate-x-0');
+            dropoffToggle.classList.remove('bg-emerald-500');
+            dropoffToggle.classList.add('bg-slate-200');
+            dropoffKnob.classList.remove('translate-x-5');
+            dropoffKnob.classList.add('translate-x-0');
+            pickupCard.classList.add('border-emerald-500');
+            pickupCard.classList.remove('border-slate-200');
+            dropoffCard.classList.remove('border-emerald-500');
+            dropoffCard.classList.add('border-slate-200');
+            pickupFields.style.maxHeight = '400px';
+            pickupFields.style.opacity = '1';
+        }
+    }
+
+    function populateConfirmation() {
+        const conditionLabels = {
+            excellent: 'Sangat Baik',
+            good: 'Baik / Bekas Layak',
+            repair: 'Perlu Perbaikan Kecil'
+        };
+        const categoryLabels = {
+            clothing: 'Pakaian',
+            electronics: 'Elektronik',
+            books: 'Buku',
+            toys: 'Mainan',
+            household: 'Perlengkapan Rumah Tangga'
+        };
+
+        document.getElementById('confirmName').textContent = document.getElementById('itemName').value || '—';
+        const catVal = document.getElementById('category').value;
+        document.getElementById('confirmCategory').textContent = categoryLabels[catVal] || '—';
+        const condVal = document.querySelector('input[name="condition"]:checked').value;
+        document.getElementById('confirmCondition').textContent = conditionLabels[condVal];
+        document.getElementById('confirmPhotoCount').textContent = uploadedPhotos.length + ' foto';
+
+        const confirmPickupDetails = document.getElementById('confirmPickupDetails');
+        if (fulfillmentMethod === 'pickup') {
+            document.getElementById('confirmMethod').textContent = 'Jadwalkan Penjemputan Gratis';
+            confirmPickupDetails.classList.remove('hidden');
+            document.getElementById('confirmAddress').textContent = document.getElementById('pickupAddress').value ||
+                '—';
+            const date = document.getElementById('pickupDate').value;
+            const time = document.getElementById('pickupTime').value;
+            document.getElementById('confirmSchedule').textContent = date ? (date + ', ' + time) : '—';
+        } else {
+            document.getElementById('confirmMethod').textContent = 'Antar ke Hub Terdekat';
+            confirmPickupDetails.classList.add('hidden');
+        }
+    }
+
+    /* ============================================================
+       PAGE 4 — RIWAYAT DONASI
+       ============================================================ */
+    const donations = [{
+            id: 1,
+            name: 'Kotak Pakaian Musim Dingin',
+            thumb: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=120&h=120&fit=crop',
+            date: '18 Jun 2026',
+            charity: 'Yayasan Kasih Bunda',
+            status: 'progress'
+        },
+        {
+            id: 2,
+            name: '15 Buku Anak Bekas Layak Baca',
+            thumb: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=120&h=120&fit=crop',
+            date: '14 Jun 2026',
+            charity: 'Rumah Baca Pelangi',
+            status: 'progress'
+        },
+        {
+            id: 3,
+            name: 'Set Mainan Edukasi Anak',
+            thumb: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=120&h=120&fit=crop',
+            date: '10 Jun 2026',
+            charity: 'Panti Asuhan Harapan Bunda',
+            status: 'completed'
+        },
+        {
+            id: 4,
+            name: 'Laptop Bekas 14" Masih Normal',
+            thumb: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=120&h=120&fit=crop',
+            date: '2 Jun 2026',
+            charity: 'Komunitas Belajar Digital',
+            status: 'completed'
+        },
+        {
+            id: 5,
+            name: 'Sofa 2-Seater Kondisi Baik',
+            thumb: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=120&h=120&fit=crop',
+            date: '28 Mei 2026',
+            charity: 'Yayasan Kasih Bunda',
+            status: 'cancelled'
+        },
+        {
+            id: 6,
+            name: 'Tas Ransel Sekolah',
+            thumb: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=120&h=120&fit=crop',
+            date: '20 Mei 2026',
+            charity: 'SDN Harapan Jaya',
+            status: 'completed'
+        },
+        {
+            id: 7,
+            name: 'Peralatan Dapur Lengkap',
+            thumb: 'https://images.unsplash.com/photo-1556909114-44e3e70034e2?w=120&h=120&fit=crop',
+            date: '15 Mei 2026',
+            charity: 'Dapur Umum Peduli',
+            status: 'completed'
+        },
+        {
+            id: 8,
+            name: 'Sepeda Anak Roda Tiga',
+            thumb: 'https://images.unsplash.com/photo-1571333250630-f0230c320b6d?w=120&h=120&fit=crop',
+            date: '8 Mei 2026',
+            charity: 'Panti Asuhan Harapan Bunda',
+            status: 'cancelled'
+        },
+    ];
+
+    const statusConfig = {
+        completed: {
+            label: 'Selesai',
+            classes: 'text-emerald-700 bg-emerald-50 border-emerald-200'
+        },
+        progress: {
+            label: 'Diproses',
+            classes: 'text-blue-700 bg-blue-50 border-blue-200'
+        },
+        cancelled: {
+            label: 'Dibatalkan',
+            classes: 'text-red-700 bg-red-50 border-red-200'
+        },
+    };
+
+    let activeFilter = 'all';
+
+    function setFilter(filter) {
+        activeFilter = filter;
+        document.querySelectorAll('.filter-pill').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.filter === filter);
+        });
+        applyFilters();
+    }
+
+    function applyFilters() {
+        const query = document.getElementById('searchInput').value.trim().toLowerCase();
+        const filtered = donations.filter(d => {
+            const matchesFilter = activeFilter === 'all' || d.status === activeFilter;
+            const matchesQuery = d.name.toLowerCase().includes(query) || d.charity.toLowerCase().includes(
+                query);
+            return matchesFilter && matchesQuery;
+        });
+        renderTable(filtered);
+        renderCards(filtered);
+
+        const countLabel = filtered.length === donations.length ?
+            `Menampilkan semua ${filtered.length} donasi` :
+            `Menampilkan ${filtered.length} dari ${donations.length} donasi`;
+        document.getElementById('resultCount').textContent = countLabel;
+    }
+
+    function badgeHtml(status) {
+        const cfg = statusConfig[status];
+        return `<span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full border ${cfg.classes}">${cfg.label}</span>`;
+    }
+
+    function renderTable(data) {
+        const tbody = document.getElementById('tableBody');
+        const emptyState = document.getElementById('emptyStateDesktop');
+        const table = tbody.closest('table');
+
+        if (data.length === 0) {
+            table.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+            emptyState.classList.add('flex');
+            tbody.innerHTML = '';
+            return;
+        }
+        table.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+
+        tbody.innerHTML = data.map((d, i) => `
+      <tr class="row-enter hover:bg-slate-50/60 transition-colors duration-150" style="animation-delay: ${i * 30}ms">
+        <td class="px-5 py-3.5">
+          <div class="flex items-center gap-3">
+            <img src="${d.thumb}" alt="${d.name}" class="h-11 w-11 rounded-lg object-cover flex-shrink-0">
+            <span class="font-medium text-slate-800">${d.name}</span>
+          </div>
+        </td>
+        <td class="px-5 py-3.5 text-slate-500">${d.date}</td>
+        <td class="px-5 py-3.5 text-slate-500">${d.charity}</td>
+        <td class="px-5 py-3.5">${badgeHtml(d.status)}</td>
+        <td class="px-5 py-3.5 text-right">
+          <button aria-label="Lihat detail donasi" class="text-slate-400 hover:text-emerald-600 transition-colors p-1.5 rounded-lg hover:bg-emerald-50">
+            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+    }
+
+    function renderCards(data) {
+        const list = document.getElementById('cardList');
+        const emptyState = document.getElementById('emptyStateMobile');
+
+        if (data.length === 0) {
+            list.innerHTML = '';
+            list.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+            emptyState.classList.add('flex');
+            return;
+        }
+        list.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+
+        list.innerHTML = data.map((d, i) => `
+      <div class="row-enter bg-white rounded-2xl border border-slate-200 p-4" style="animation-delay: ${i * 30}ms">
+        <div class="flex items-start gap-3.5">
+          <img src="${d.thumb}" alt="${d.name}" class="h-14 w-14 rounded-xl object-cover flex-shrink-0">
+          <div class="min-w-0 flex-1">
+            <div class="flex items-start justify-between gap-2">
+              <p class="font-semibold text-slate-800 text-sm leading-snug">${d.name}</p>
+              ${badgeHtml(d.status)}
+            </div>
+            <p class="text-xs text-slate-500 mt-1.5">${d.charity}</p>
+            <p class="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
+              <svg class="h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              Diajukan ${d.date}
+            </p>
+          </div>
+        </div>
+      </div>
+    `).join('');
+    }
+
+    applyFilters();
+    </script>
+
+</body>
+
+</html>
