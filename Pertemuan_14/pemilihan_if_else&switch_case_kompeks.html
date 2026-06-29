@@ -9,24 +9,15 @@
     <h3>Pemilihan if else & switch case</h3>
     <p>1. If else</p>
     <p>2. Switch case</p>
+    <script src="../shared/utils/grading.js"></script>
     <script>
     function hitungTotalBayar(totalBelanja, statusMember, metodePembayaran) {
-    let diskon = 0;
-
-    // 1. Kompleksitas If-Else (Pengecekan tingkat keanggotaan & nominal belanja)
-    if (statusMember === "Platinum" && totalBelanja >= 500000) {
-        diskon = 0.20; // Diskon 20%
-    } else if (statusMember === "Gold" || totalBelanja >= 300000) {
-        diskon = 0.10; // Diskon 10%
-    } else if (statusMember === "Silver" && totalBelanja >= 150000) {
-        diskon = 0.05; // Diskon 5%
-    } else {
-        diskon = 0; // Tidak dapat diskon
-    }
+    // Menggunakan shared utility calculateMemberDiscount
+    let diskon = calculateMemberDiscount(totalBelanja, statusMember);
 
     let totalSetelahDiskon = totalBelanja - (totalBelanja * diskon);
 
-    // 2. Kompleksitas Switch Case (Pengecekan biaya admin / cashback berdasarkan metode pembayaran)
+    // Switch Case untuk biaya admin berdasarkan metode pembayaran
     let biayaAdmin = 0;
     let pesanInfo = "";
 

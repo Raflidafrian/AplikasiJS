@@ -1,0 +1,225 @@
+/**
+ * Shared Base CSS Styles
+ * Consolidates repeated reset and base styling patterns from:
+ * - Pertemuan_11/apliaksi_sederhana_js.html
+ * - Pertemuan_14/kalkulator_html_css_js.html
+ * - Pertemuan_14/Input_Data_Mahasiswa_array.html
+ */
+
+/* === CSS Reset === */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* === Base Typography === */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* === Common Layout Utilities === */
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-column-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.full-height {
+    min-height: 100vh;
+}
+
+/* === Card Component (repeated across Pertemuan_11 and Pertemuan_14) === */
+.card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 420px;
+}
+
+.card-wide {
+    max-width: 950px;
+}
+
+/* === Form Styles (repeated across multiple files) === */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #4a5568;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 14px;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s ease;
+    background-color: #f8fafc;
+    font-family: inherit;
+}
+
+.form-input:focus {
+    border-color: #3182ce;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15);
+    background-color: #fff;
+}
+
+/* === Button Base Styles (repeated across all interactive files) === */
+.btn {
+    padding: 12px 24px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: #3182ce;
+}
+
+.btn-primary:hover {
+    background-color: #2b6cb0;
+    transform: translateY(-1px);
+}
+
+.btn-success {
+    background-color: #38a169;
+}
+
+.btn-success:hover {
+    background-color: #2f855a;
+    transform: translateY(-1px);
+}
+
+.btn-danger {
+    background-color: #ef4444;
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+}
+
+.btn-warning {
+    background-color: #f59e0b;
+}
+
+.btn-warning:hover {
+    background-color: #d97706;
+}
+
+.btn-full {
+    width: 100%;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 6px;
+}
+
+/* === Table Styles (repeated in Pertemuan_14 and Pertemuan_16) === */
+.table-responsive {
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+.data-table th,
+.data-table td {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 14px;
+    border: 1px solid #cbd5e1;
+}
+
+.data-table th {
+    background-color: #f1f5f9;
+    color: #475569;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+.data-table tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+.data-table tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* === Result/Alert Box (from Pertemuan_11) === */
+.result-box {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 6px;
+    background-color: #f7fafc;
+    border-left: 4px solid #cbd5e0;
+    display: none;
+}
+
+.result-box.success {
+    background-color: #f0fff4;
+    border-left-color: #38a169;
+    color: #276749;
+}
+
+.result-box.error {
+    background-color: #fff5f5;
+    border-left-color: #e53e3e;
+    color: #9b2c2c;
+}
+
+/* === Action Button Group (from Pertemuan_14) === */
+.action-buttons {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+/* === Section Title === */
+.section-title {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 22px;
+    text-align: center;
+    border-bottom: 2px solid #edf2f7;
+    padding-bottom: 10px;
+}
+
+/* === Grid Layout (from Pertemuan_14) === */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}

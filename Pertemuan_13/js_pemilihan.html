@@ -8,37 +8,21 @@
 <body>
     <h1>PEMILIHAN HTML</h1>
     <p>Contoh penggunaan pemilihan dalam JavaScript</p>
+    <script src="../shared/utils/grading.js"></script>
     <script>
-        // if statement
-        var nilai = 80;
-        if (nilai >= 75) {
-            console.log ("LULUS");
-        }
-        var nilai = 60;
-        if (nilai >= 75) {
-            console.log ("LULUS");
-        }
-        else {
-            console.log ("TIDAK LULUS");
-        }
+        // Menggunakan shared utility evaluatePassFail
+        var nilai1 = 80;
+        var result1 = evaluatePassFail(nilai1, 75);
+        console.log(result1.status); // Output: LULUS
 
-        //  if else if
-        var nilai = 85;
-        if (nilai >= 90) {
-            console.log ("A, sangat memuaskan");
-        }
-        else if (nilai >= 75) {
-            console.log ("B, memuaskan");
-        }
-        else if (nilai >= 70) {
-            console.log ("C, tidak memuaskan");
-        }
-        else if (nilai >= 60) {
-            console.log ("D");
-        }
-        else {
-            console.log ("E");
-        }
+        var nilai2 = 60;
+        var result2 = evaluatePassFail(nilai2, 75);
+        console.log(result2.status); // Output: TIDAK LULUS
+
+        // Menggunakan shared utility getLetterGrade
+        var nilai3 = 85;
+        var grade = getLetterGrade(nilai3);
+        console.log(grade.grade + ", " + grade.description); // Output: B, Memuaskan
     </script>
     
 </body>
