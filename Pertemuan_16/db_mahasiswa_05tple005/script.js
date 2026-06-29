@@ -6,7 +6,12 @@ function loadData(tipe = 'mahasiswa') {
     let endpoint = (tipe === 'mahasiswa') ? 'api.php?action=list' : `api.php?action=list_${tipe}`;
 
     fetch(endpoint)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             let html = '';
             if (data.length === 0) {
@@ -32,6 +37,10 @@ function loadData(tipe = 'mahasiswa') {
                 });
             }
             tempatData.innerHTML = html;
+        })
+        .catch(error => {
+            console.error(`Gagal memuat data ${tipe}:`, error);
+            tempatData.innerHTML = `<tr><td colspan="6" class="text-center text-danger p-3">Gagal memuat data. Silakan coba lagi.</td></tr>`;
         });
 }
 
@@ -46,13 +55,22 @@ function hapusData(table, id) {
             method: 'POST',
             body: formData
         })
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+        })
         .then(data => {
             if (data.status === 'success') {
                 loadData(table);
             } else {
-                alert('Gagal: ' + data.message);
+                alert('Gagal: ' + (data.message || 'Terjadi kesalahan saat menghapus data.'));
             }
+        })
+        .catch(error => {
+            console.error('Gagal menghapus data:', error);
+            alert('Terjadi kesalahan jaringan saat menghapus data. Silakan coba lagi.');
         });
     }
 }
@@ -60,8 +78,17 @@ function hapusData(table, id) {
 // 3. Fungsi Siapkan Edit (Dilengkapi untuk matkul & jadwal)
 function siapkanEdit(table, id) {
     fetch(`api.php?action=get_single&id=${id}&table=${table}`)
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+        })
         .then(data => {
+            if (!data || !data.id) {
+                throw new Error('Data tidak ditemukan atau format tidak valid.');
+            }
+
             let modal = new bootstrap.Modal(document.getElementById(`${table}Modal`));
             
             // Isi form (Sesuaikan ID input dengan yang ada di index.php)
@@ -89,6 +116,10 @@ function siapkanEdit(table, id) {
             }
             
             modal.show();
+        })
+        .catch(error => {
+            console.error('Gagal memuat data untuk edit:', error);
+            alert('Gagal memuat data. Silakan coba lagi.');
         });
 }
 
@@ -113,7 +144,12 @@ function simpanData(event, jenis) {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.status === 'success') {
             // Tutup modal dengan cara yang benar
@@ -130,7 +166,10 @@ function simpanData(event, jenis) {
             alert('Gagal menyimpan data: ' + (data.message || 'Terjadi kesalahan'));
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Gagal menyimpan data:', error);
+        alert('Terjadi kesalahan jaringan saat menyimpan data. Silakan coba lagi.');
+    });
 }
 
 // Listener Tab
@@ -166,7 +205,12 @@ function muatOpsiDropdown() {
     return Promise.all([
         // Muat Dosen
         fetch('api.php?action=list_dosen')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Gagal memuat dosen: HTTP ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 let selectDosen = document.getElementById('id_dosen');
                 if (selectDosen) {
@@ -179,7 +223,12 @@ function muatOpsiDropdown() {
 
         // Muat Mata Kuliah
         fetch('api.php?action=list_matkul')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Gagal memuat mata kuliah: HTTP ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 let selectMatkul = document.getElementById('id_matkul');
                 if (selectMatkul) {
@@ -189,7 +238,10 @@ function muatOpsiDropdown() {
                     });
                 }
             })
-    ]).catch(error => console.error('Gagal memuat opsi dropdown:', error));
+    ]).catch(error => {
+        console.error('Gagal memuat opsi dropdown:', error);
+        alert('Gagal memuat opsi dropdown. Silakan muat ulang halaman.');
+    });
 }
 
 // Tambahkan kode ini di bawah script.js Anda
