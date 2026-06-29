@@ -88,20 +88,20 @@ if ($action == 'get_single') {
 // Simpan Mahasiswa
 if ($_GET['action'] == 'save') {
     $id = $_POST['id'];
-    $nim = $_POST['nim'];
-    $nama = $_POST['nama'];
-    $jurusan = $_POST['jurusan'];
-    $email = $_POST['email'];
+    $nim = mysqli_real_escape_string($conn, $_POST['nim']);
+    $nama = mysqli_real_escape_string($conn, $_POST['nama']);
+    $jurusan = mysqli_real_escape_string($conn, $_POST['jurusan']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
 
     if (empty($id)) {
         $sql = "INSERT INTO mahasiswa (nim, nama, jurusan, email) VALUES ('$nim', '$nama', '$jurusan', '$email')";
     } else {
-        $id  = intval($id); // Konversi ID menjadi Integer agar query aman & valid
+        $id  = intval($id);
         $sql = "UPDATE mahasiswa SET nim='$nim', nama='$nama', jurusan='$jurusan', email='$email' WHERE id=$id";
     }
 
     if (mysqli_query($conn, $sql)) { echo json_encode(['status' => 'success']); } 
-    else { echo json_encode(['status' => 'error', 'message' => mysqli_error($conn)]); }
+    else { echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan data.']); }
     exit;
 }
 
@@ -119,7 +119,7 @@ if ($action == 'save_dosen') {
     }
 
     if (mysqli_query($conn, $sql)) { echo json_encode(['status' => 'success']); } 
-    else { echo json_encode(['status' => 'error', 'message' => mysqli_error($conn)]); }
+    else { echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan data dosen.']); }
     exit;
 }
 
@@ -137,7 +137,7 @@ if ($action == 'save_matkul') {
     }
 
     if (mysqli_query($conn, $sql)) { echo json_encode(['status' => 'success']); } 
-    else { echo json_encode(['status' => 'error', 'message' => mysqli_error($conn)]); }
+    else { echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan data matkul.']); }
     exit;
 }
 
@@ -157,7 +157,7 @@ if ($action == 'save_jadwal') {
     }
 
     if (mysqli_query($conn, $sql)) { echo json_encode(['status' => 'success']); } 
-    else { echo json_encode(['status' => 'error', 'message' => mysqli_error($conn)]); }
+    else { echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan data jadwal.']); }
     exit;
 }
 
@@ -174,7 +174,7 @@ if ($action == 'delete') {
         if (mysqli_query($conn, $sql)) {
             echo json_encode(['status' => 'success']);
         } else {
-            echo json_encode(['status' => 'error', 'message' => mysqli_error($conn)]);
+            echo json_encode(['status' => 'error', 'message' => 'Gagal menghapus data.']);
         }
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Nama tabel tidak valid.']);

@@ -1,3 +1,9 @@
+// Helper: escape HTML to prevent XSS
+function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
 // 1. Load Data
 function loadData(tipe = 'mahasiswa') {
     let tempatData = document.getElementById(`tempat-${tipe}`);
@@ -16,13 +22,13 @@ function loadData(tipe = 'mahasiswa') {
                     html += `<tr><td>${index + 1}</td>`;
                     
                     if (tipe === 'mahasiswa') {
-                        html += `<td>${item.nim}</td><td>${item.nama}</td><td>${item.jurusan}</td><td>${item.email}</td>`;
+                        html += `<td>${escapeHtml(item.nim)}</td><td>${escapeHtml(item.nama)}</td><td>${escapeHtml(item.jurusan)}</td><td>${escapeHtml(item.email)}</td>`;
                     } else if (tipe === 'dosen') {
-                        html += `<td>${item.nama}</td><td>${item.alamat}</td>`;
+                        html += `<td>${escapeHtml(item.nama)}</td><td>${escapeHtml(item.alamat)}</td>`;
                     } else if (tipe === 'matkul') {
-                        html += `<td>${item.matkul}</td><td>${item.sks}</td>`;
+                        html += `<td>${escapeHtml(item.matkul)}</td><td>${escapeHtml(item.sks)}</td>`;
                     } else if (tipe === 'jadwal') {
-                        html += `<td>${item.nama_dosen}</td><td>${item.matkul} (${item.sks} SKS)</td><td>${item.waktu}</td><td>${item.ruang}</td>`;
+                        html += `<td>${escapeHtml(item.nama_dosen)}</td><td>${escapeHtml(item.matkul)} (${escapeHtml(item.sks)} SKS)</td><td>${escapeHtml(item.waktu)}</td><td>${escapeHtml(item.ruang)}</td>`;
                     }
 
                     html += `<td class="text-center">

@@ -19,15 +19,25 @@ if (isset($_POST['submit_login'])) {
     $username = mysqli_real_escape_string($conn, $_POST['username']);
     $password = $_POST['password'];
 
-    // Cari username di database
     $query  = "SELECT * FROM users WHERE username = '$username'";
     $result = mysqli_query($conn, $query);
 
     if ($result && mysqli_num_rows($result) === 1) {
         $row = mysqli_fetch_assoc($result);
         
-        // Mencocokkan password teks biasa ("admin123") dengan yang ada di DB
-        if ($password === $row['password']) {
+        // Gunakan password_verify untuk hash, fallback ke plaintext untuk migrasi
+        $passwordMatch = false;
+        if (password_verify($password, $row['password'])) {
+            $passwordMatch = true;
+        } elseif ($password === $row['password']) {
+            // Fallback plaintext — perbarui ke hash agar aman ke depannya
+            $hashed = password_hash($password, PASSWORD_DEFAULT);
+            mysqli_query($conn, "UPDATE users SET password='" . mysqli_real_escape_string($conn, $hashed) . "' WHERE id=" . intval($row['id']));
+            $passwordMatch = true;
+        }
+
+        if ($passwordMatch) {
+            session_regenerate_id(true);
             $_SESSION['login'] = true;
             $_SESSION['username'] = $row['username'];
             
