@@ -268,7 +268,12 @@
 
 <script>
     const dataMahasiswa = [];
-    let editIndex = null; 
+    let editIndex = null;
+
+    function escapeHtml(str) {
+        if (str == null) return '';
+        return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    }
 
     const form = document.getElementById('formMahasiswa');
     const tabelBody = document.getElementById('tabelData');
@@ -323,10 +328,10 @@
 
             baris.innerHTML = `
                 <td><b>${index + 1}</b></td>
-                <td>${mahasiswa.nim}</td>
-                <td>${mahasiswa.nama}</td>
-                <td>${mahasiswa.jurusan}</td>
-                <td>${mahasiswa.fakultas}</td>
+                <td>${escapeHtml(mahasiswa.nim)}</td>
+                <td>${escapeHtml(mahasiswa.nama)}</td>
+                <td>${escapeHtml(mahasiswa.jurusan)}</td>
+                <td>${escapeHtml(mahasiswa.fakultas)}</td>
                 <td>
                     <div class="action-buttons">
                         <button class="btn-action btn-edit" onclick="mulaiEditData(${index})">Edit</button>

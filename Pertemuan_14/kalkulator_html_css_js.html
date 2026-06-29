@@ -210,7 +210,13 @@
         function calculateResult() {
             try {
                 if (display.value !== '') {
-                    display.value = eval(display.value);
+                    // Validasi: hanya izinkan angka, operator aritmatika, titik, dan spasi
+                    if (/^[\d+\-*/.\s()]+$/.test(display.value)) {
+                        display.value = Function('"use strict"; return (' + display.value + ')')();
+                    } else {
+                        display.value = 'Error';
+                        setTimeout(clearDisplay, 1500);
+                    }
                 }
             } catch (error) {
                 display.value = 'Error';
