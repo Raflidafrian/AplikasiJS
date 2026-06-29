@@ -1676,6 +1676,10 @@
             p.classList.remove('active', 'page-fade');
         });
         const target = document.getElementById(pageId);
+        if (!target) {
+            console.error('Halaman tidak ditemukan:', pageId);
+            return;
+        }
         target.classList.add('active');
         void target.offsetWidth; // restart animasi fade tiap kali pindah halaman
         target.classList.add('page-fade');
@@ -1940,7 +1944,6 @@
     function handleFiles(files) {
         Array.from(files).forEach(file => {
             if (!file.type.startsWith('image/')) return;
-            // eslint-disable-next-line no-undef
             const reader = new FileReader();
             reader.onload = (e) => {
                 const id = 'photo-' + Date.now() + Math.random().toString(36).slice(2, 7);
@@ -1950,6 +1953,10 @@
                     name: file.name
                 });
                 renderThumbnails();
+            };
+            reader.onerror = (e) => {
+                console.error('Gagal membaca file:', file.name, e);
+                alert('Gagal membaca file "' + file.name + '". Silakan coba file lain.');
             };
             reader.readAsDataURL(file);
         });
@@ -2039,8 +2046,9 @@
         document.getElementById('confirmName').textContent = document.getElementById('itemName').value || '—';
         const catVal = document.getElementById('category').value;
         document.getElementById('confirmCategory').textContent = categoryLabels[catVal] || '—';
-        const condVal = document.querySelector('input[name="condition"]:checked').value;
-        document.getElementById('confirmCondition').textContent = conditionLabels[condVal];
+        const conditionInput = document.querySelector('input[name="condition"]:checked');
+        const condVal = conditionInput ? conditionInput.value : null;
+        document.getElementById('confirmCondition').textContent = condVal ? (conditionLabels[condVal] || '—') : '—';
         document.getElementById('confirmPhotoCount').textContent = uploadedPhotos.length + ' foto';
 
         const confirmPickupDetails = document.getElementById('confirmPickupDetails');
