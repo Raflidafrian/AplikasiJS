@@ -17,37 +17,37 @@
         <input type="number" id="umur" name="umur"><br><br>
         <button type="button" onclick="submitForm()">Submit</button>
     </form>
+
+    <form>
+        <label for="nama2">Nama:</label>
+        <input type="text" id="nama2" name="nama"><br><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email"><br><br>
+        <input type="submit" onclick="validateContactForm();" value="submit">
+    </form>
+    <p id="result"></p>
+
+    <script src="../shared/utils/dom.js"></script>
+    <script src="../shared/utils/validation.js"></script>
     <script>
-        // fungsi untuk mengirim data ke server
+        // fungsi untuk mengirim data menggunakan shared utilities
         function submitForm() {
-            var nama = document.getElementById("nama").value;
-            var umur = document.getElementById("umur").value;
+            var nama = getValue('nama');
+            var umur = getValue('umur');
             console.log("Nama: " + nama);
             console.log("Umur: " + umur);
         }
-    </script>
 
-    <form>
-        <label for="nama">Nama:</label>
-        <input type="text" id="nama" name="nama"><br><br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email"><br><br>
-        <input type="submit" onclick="validateForm();" value="submit">
-    </form>
-
-    <script>
-        // fungsi validasi form
-        function validateForm() {
-            var nama = document.getElementById("nama").value;
-            var email = document.getElementById("email").value;
-            if (nama == "" || email == "") {
-                document.getElementById("result").innerHTML = "Nama dan Email harus diisi!";
+        // fungsi validasi form menggunakan shared utilities
+        function validateContactForm() {
+            var validation = validateRequired(['nama2', 'email']);
+            if (!validation.valid) {
+                setHTML('result', "Nama dan Email harus diisi!");
             } else {
-                document.getElementById("result").innerHTML = "Form berhasil disubmit!";
+                setHTML('result', "Form berhasil disubmit!");
             }
         }
     </script>
-    <p id="result"></p>
 
 </body>
 </html>

@@ -4,13 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tugas Membuat Aplikasi JS - Operator Lengkap</title>
+    <link rel="stylesheet" href="../shared/styles/base.css">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
         body {
             background-color: #f4f6f9;
             display: flex;
@@ -19,14 +14,6 @@
             min-height: 100vh;
             padding: 20px;
         }
-        .card {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            width: 100%;
-            max-width: 420px;
-        }
         h2 {
             color: #2c3e50;
             margin-bottom: 20px;
@@ -34,52 +21,6 @@
             text-align: center;
             border-bottom: 2px solid #edf2f7;
             padding-bottom: 10px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 6px;
-            color: #4a5568;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #cbd5e0;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.2s;
-        }
-        input[type="number"]:focus {
-            outline: none;
-            border-color: #3182ce;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #3182ce;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #2b6cb0;
-        }
-        .result-box {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 6px;
-            background-color: #f7fafc;
-            border-left: 4px solid #cbd5e0;
-            display: none;
         }
         .result-box.lulus {
             background-color: #f0fff4;
@@ -105,15 +46,15 @@
     
     <div class="form-group">
         <label for="nilaiTugas">Nilai Tugas (Bobot 40%):</label>
-        <input type="number" id="nilaiTugas" placeholder="0 - 100" min="0" max="100">
+        <input type="number" id="nilaiTugas" class="form-input" placeholder="0 - 100" min="0" max="100">
     </div>
 
     <div class="form-group">
         <label for="nilaiUjian">Nilai Ujian (Bobot 60%):</label>
-        <input type="number" id="nilaiUjian" placeholder="0 - 100" min="0" max="100">
+        <input type="number" id="nilaiUjian" class="form-input" placeholder="0 - 100" min="0" max="100">
     </div>
 
-    <button onclick="prosesEvaluasi()">Hitung Nilai & Cek</button>
+    <button class="btn btn-primary btn-full" onclick="prosesEvaluasi()">Hitung Nilai & Cek</button>
 
     <div class="result-box" id="resultBox">
         <div class="result-title" id="statusOutput"></div>
@@ -121,57 +62,47 @@
     </div>
 </div>
 
+<script src="../shared/utils/dom.js"></script>
+<script src="../shared/utils/validation.js"></script>
+<script src="../shared/utils/grading.js"></script>
 <script>
 function prosesEvaluasi() {
-    // Mengambil nilai dari input form
-    let tugas = parseFloat(document.getElementById('nilaiTugas').value);
-    let ujian = parseFloat(document.getElementById('nilaiUjian').value);
+    // Mengambil nilai dari input form menggunakan shared utility
+    let tugas = getNumericValue('nilaiTugas');
+    let ujian = getNumericValue('nilaiUjian');
 
-    // Validasi input jika kosong
-    if (isNaN(tugas) || isNaN(ujian)) {
-        alert("Silakan masukkan kedua nilai terlebih dahulu!");
+    // Validasi input menggunakan shared utility
+    if (!isValidNumber(tugas) || !isValidNumber(ujian)) {
+        showValidationError("Silakan masukkan kedua nilai terlebih dahulu!");
         return;
     }
 
-    // 1. OPERATOR ARITMATIKA (* dan +)
-    // Menghitung Nilai Akhir berdasarkan bobot persentase
-    let nilaiAkhir = (tugas * 0.4) + (ujian * 0.6);
+    // Menghitung Nilai Akhir menggunakan shared utility
+    let nilaiAkhir = calculateWeightedScore([
+        { score: tugas, weight: 0.4 },
+        { score: ujian, weight: 0.6 }
+    ]);
 
-    // 2. OPERATOR PENUGASAN (+=)
-    // Simulasi penambahan nilai bonus absensi secara cepat ke variabel nilaiAkhir
+    // Simulasi penambahan nilai bonus absensi
     let bonusAbsen = 3;
     nilaiAkhir += bonusAbsen;
 
-    // Menentukan batas standar kelulusan
-    let kkm = 70;
-    let statusSiswa = "";
+    // Evaluasi kelulusan menggunakan shared utility
+    let hasil = evaluatePassFail(nilaiAkhir, 70);
 
-    // 3. OPERATOR PEMBANDING (>= dan ===)
-    // Membandingkan nilai akhir dengan KKM
-    if (nilaiAkhir >= kkm) {
-        statusSiswa = "LULUS";
-    } else {
-        statusSiswa = "REVISI";
-    }
-
-    // Manipulasi DOM untuk menampilkan hasil di komponen UI
-    let box = document.getElementById('resultBox');
-    let statusOut = document.getElementById('statusOutput');
-    let detailOut = document.getElementById('detailOutput');
-
+    // Manipulasi DOM menggunakan shared utilities
+    let box = getElement('resultBox');
     box.style.display = "block";
     
-    // Menggunakan operator pembanding === untuk menentukan class styling card secara spesifik
-    if (statusSiswa === "LULUS") {
+    if (hasil.passed) {
         box.className = "result-box lulus";
-        statusOut.innerHTML = "Selamat, Anda LULUS! 🎉";
+        setHTML('statusOutput', "Selamat, Anda LULUS! 🎉");
     } else {
         box.className = "result-box gagal";
-        statusOut.innerHTML = "Maaf, Anda Harus REVISI! 📚";
+        setHTML('statusOutput', "Maaf, Anda Harus REVISI! 📚");
     }
 
-    // Menampilkan rincian kalkulasi matematika ke user
-    detailOut.innerHTML = `Nilai Akhir (Termasuk Bonus +${bonusAbsen}): <strong>${nilaiAkhir.toFixed(1)}</strong>`;
+    setHTML('detailOutput', `Nilai Akhir (Termasuk Bonus +${bonusAbsen}): <strong>${nilaiAkhir.toFixed(1)}</strong>`);
 }
 </script>
 
