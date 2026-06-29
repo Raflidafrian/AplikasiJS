@@ -17,3 +17,7 @@ class Mobil extends Kendaraan {
 
 const myCar = new Mobil("Avanza", "MPV");
 myCar.bergerak(); // Output: Avanza sedang bergerak.
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { Kendaraan, Mobil };
+}

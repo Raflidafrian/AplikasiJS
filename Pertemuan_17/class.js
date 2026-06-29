@@ -11,3 +11,7 @@ class Mobil {
 
 const mobilSaya = new Mobil("Toyota", "Merah");
 console.log(mobilSaya.klakson()); // Output: Toyota berbunyi: Beep!
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { Mobil };
+}
